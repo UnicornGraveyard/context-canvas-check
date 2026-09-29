@@ -1,0 +1,97 @@
+{
+  "duration_api_ms": 7617,
+  "stop_reason": "end_turn",
+  "session_id": "5096c938-c53f-4e3a-a384-075399276ba7",
+  "total_cost_usd": 0.04556840000000001,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 3608,
+    "cache_read_input_tokens": 22862,
+    "output_tokens": 605,
+    "output_tokens_details": {
+      "thinking_tokens": 38
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3608,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 208,
+        "cache_read_input_tokens": 6854,
+        "cache_creation_input_tokens": 339,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 339
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 605,
+      "cacheReadInputTokens": 22862,
+      "cacheCreationInputTokens": 3608,
+      "webSearchRequests": 0,
+      "costUSD": 0.04556840000000001,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 38,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 4,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I added `\"Bash(npm test)\"` to the `permissions.allow` list in `.claude/settings.json`, next to your existing `npm run lint` and `npm run build` rules. Claude can now run `npm test` without asking for permission.\n\n- **Exact match only:** the rule covers only the exact command `npm test`. If you also want variants like `npm test -- --watch` to run without asking, change it to `\"Bash(npm test:*)\"`.\n- **Shared with the team:** this file is checked into the repo, so the rule applies to everyone. If you want it just for yourself, I can move it to `.claude/settings.local.json` instead.",
+  "ttft_ms": 2144,
+  "type": "result",
+  "duration_ms": 7681,
+  "uuid": "c61962ba-5b40-44b1-98f5-c97c84dd4bb3",
+  "ttft_stream_ms": 675,
+  "time_to_request_ms": 24,
+  "first_content_frame_ms": 675,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

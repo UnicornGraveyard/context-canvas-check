@@ -1,0 +1,97 @@
+{
+  "duration_api_ms": 13565,
+  "stop_reason": "end_turn",
+  "session_id": "0c3e3b78-c30a-40d4-88ab-9a62babe9eb0",
+  "total_cost_usd": 0.058122999999999994,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 4139,
+    "cache_read_input_tokens": 23395,
+    "output_tokens": 1015,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4139,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 304,
+        "cache_read_input_tokens": 7270,
+        "cache_creation_input_tokens": 454,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 454
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 1015,
+      "cacheReadInputTokens": 23395,
+      "cacheCreationInputTokens": 4139,
+      "webSearchRequests": 0,
+      "costUSD": 0.058122999999999994,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 0,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 6,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I added the docs-writer subagent in `.claude/agents/docs-writer.md`, following the format of your other agents.\n\n- **No shell commands:** it can only use `Read, Grep, Glob, Edit, Write`. Bash isn't on that list, so it can't run anything.\n- **Fastest model:** it uses `model: haiku`, the fastest of the model options.\n- **Staying in docs/:** its instructions say to edit only files under `docs/`, check the code before documenting it, match the existing docs' style, and write secrets as `${VAR}`.\n\nThe \"only under `docs/`\" rule is an instruction, not an enforced limit: the Write and Edit tools can still reach any file in the repo. If you want that enforced, a hook (like your existing `block-rm.mjs`) could reject edits outside `docs/`.\n\nI didn't run `npm run lint` or `npm run build` because this change adds only a config file and no app code.",
+  "ttft_ms": 2085,
+  "type": "result",
+  "duration_ms": 13639,
+  "uuid": "5b4f4626-ab9c-4ec1-a7d2-a54a76afff37",
+  "ttft_stream_ms": 1842,
+  "time_to_request_ms": 24,
+  "first_content_frame_ms": 1842,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

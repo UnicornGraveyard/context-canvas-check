@@ -1,0 +1,12 @@
+diff --git a/CLAUDE.md b/CLAUDE.md
+index b29dcd0..b3b6ebe 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -2,6 +2,6 @@
+ 
+ Terraform for our AWS accounts (infra/) and Go services (services/).
+ 
+-- Changes to infra/prod need a plan reviewed by a person. Never apply from a session.
++- Changes to infra/modules/ need a plan reviewed by a person. Never apply from a session.
+ - Run `make lint` and `make test` before you finish.
+ - The sre agent investigates incidents and never edits files.

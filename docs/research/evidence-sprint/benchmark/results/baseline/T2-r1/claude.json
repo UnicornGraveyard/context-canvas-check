@@ -1,0 +1,97 @@
+{
+  "duration_api_ms": 8267,
+  "stop_reason": "end_turn",
+  "session_id": "4b60f848-cb90-4103-ace7-52ba27749916",
+  "total_cost_usd": 0.0460698,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 3596,
+    "cache_read_input_tokens": 22849,
+    "output_tokens": 635,
+    "output_tokens_details": {
+      "thinking_tokens": 38
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3596,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 240,
+        "cache_read_input_tokens": 6847,
+        "cache_creation_input_tokens": 334,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 334
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 635,
+      "cacheReadInputTokens": 22849,
+      "cacheCreationInputTokens": 3596,
+      "webSearchRequests": 0,
+      "costUSD": 0.0460698,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 38,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 4,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I added `\"Bash(npm test)\"` to `permissions.allow` in `.claude/settings.json`, next to the existing lint and build rules. Claude will now run `npm test` without asking.\n\n- **Exact command only:** the rule matches plain `npm test`. If you also want versions with extra arguments, like `npm test -- --watch`, I can change it to `\"Bash(npm test:*)\"`.\n- **Shared file:** this settings file is checked into the repo, so the rule applies to everyone on the project. If you'd rather keep it to yourself, I can move it to `.claude/settings.local.json`.\n- **Hook still runs:** the existing Bash hook (`block-rm.mjs`) still checks the command before it runs.",
+  "ttft_ms": 2245,
+  "type": "result",
+  "duration_ms": 8508,
+  "uuid": "ac94fa56-0d0c-479c-b94c-9faaccfe793a",
+  "ttft_stream_ms": 931,
+  "time_to_request_ms": 192,
+  "first_content_frame_ms": 932,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

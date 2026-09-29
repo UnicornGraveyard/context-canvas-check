@@ -1,0 +1,17 @@
+{
+  "task": "T10",
+  "run": 2,
+  "fixture": "platform",
+  "prompt": "We no longer use the internal-docs MCP server. Remove it.",
+  "claudeVersion": "2.1.283 (Claude Code)",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 15805,
+  "costUsd": 0.0802914,
+  "turns": 9,
+  "isError": false,
+  "finishedAt": "2026-09-27T12:19:57.977Z"
+}

@@ -1,0 +1,12 @@
+diff --git a/.claude/settings.json b/.claude/settings.json
+index f894c91..0ffda7c 100644
+--- a/.claude/settings.json
++++ b/.claude/settings.json
+@@ -4,6 +4,7 @@
+     "allow": [
+       "Bash(npm run lint)",
+       "Bash(npm run build)",
++      "Bash(npm test)",
+       "Read(src/**)",
+       "mcp__github"
+     ],

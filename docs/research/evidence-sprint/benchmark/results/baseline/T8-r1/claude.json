@@ -1,0 +1,97 @@
+{
+  "duration_api_ms": 9241,
+  "stop_reason": "end_turn",
+  "session_id": "efe2a2f7-e575-4e57-b624-2de74c100c22",
+  "total_cost_usd": 0.0444688,
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 3364,
+    "cache_read_input_tokens": 16364,
+    "output_tokens": 713,
+    "output_tokens_details": {
+      "thinking_tokens": 235
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3364,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 225,
+        "cache_read_input_tokens": 6631,
+        "cache_creation_input_tokens": 318,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 318
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 6,
+      "outputTokens": 713,
+      "cacheReadInputTokens": 16364,
+      "cacheCreationInputTokens": 3364,
+      "webSearchRequests": 0,
+      "costUSD": 0.0444688,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 235,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 3,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I changed the scope of the Terraform rule in `CLAUDE.md:5`. It now reads:\n\n> Changes to infra/modules/ need a plan reviewed by a person. Never apply from a session.\n\nThis means `infra/prod` is no longer covered. Changes there won't need a person to review the plan, and nothing in `CLAUDE.md` stops a session from applying them. If you want both directories covered, I can list `infra/prod` and `infra/modules/` together.\n\nI didn't run `make lint` or `make test` because I only edited a doc file, and I don't have a shell tool in this session.",
+  "ttft_ms": 3009,
+  "type": "result",
+  "duration_ms": 9325,
+  "uuid": "a77e61f4-582f-4a64-8a13-4dd3a7916d2f",
+  "ttft_stream_ms": 644,
+  "time_to_request_ms": 21,
+  "first_content_frame_ms": 644,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

@@ -1,0 +1,97 @@
+{
+  "duration_api_ms": 18735,
+  "stop_reason": "end_turn",
+  "session_id": "bcd411c6-fbe9-4de5-844c-bc27cc65137e",
+  "total_cost_usd": 0.0711904,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 4432,
+    "cache_read_input_tokens": 23212,
+    "output_tokens": 1553,
+    "output_tokens_details": {
+      "thinking_tokens": 692
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4432,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 544,
+        "cache_read_input_tokens": 7086,
+        "cache_creation_input_tokens": 931,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 931
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 1553,
+      "cacheReadInputTokens": 23212,
+      "cacheCreationInputTokens": 4432,
+      "webSearchRequests": 0,
+      "costUSD": 0.0711904,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 692,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 4,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I added two deny rules to `.claude/settings.json`, in the `permissions.deny` list:\n\n```json\n\"Read(/infra/prod/**)\",\n\"Edit(/infra/prod/**)\"\n```\n\n- **What they block:** `Read` stops reading, searching and listing files in that folder. `Edit` covers every tool that changes files, so writing new files there is blocked too.\n- **Where the path starts:** A leading `/` means the path starts from the project root. So the rule still applies if Claude is started from a subdirectory. Your existing `./secrets/**` rule starts from wherever Claude is launched instead.\n- **Why deny:** Deny rules win over any allow or ask rule, so nothing can override them.\n\n**Remaining gap:** these rules don't cover shell commands. If Claude has shell access, a command like `cat infra/prod/main.tf` or `sed -i ...` could still get at the files. Blocking command patterns in `Bash(...)` rules is easy to get around. If you need that closed, the reliable options are:\n- turning on Claude Code's sandbox with that folder excluded, or\n- adding a `PreToolUse` hook that rejects any shell command mentioning `infra/prod`.\n\nI can set up either one.\n\nRules are loaded when a session starts, so start a new session for them to apply. I haven't run `make lint` or `make test`, because I don't have a shell tool here. The change only touches the settings file, not Terraform or Go code.",
+  "ttft_ms": 2162,
+  "type": "result",
+  "duration_ms": 18831,
+  "uuid": "0660a72a-bd27-45f1-95fa-aa63cb457f5e",
+  "ttft_stream_ms": 1169,
+  "time_to_request_ms": 25,
+  "first_content_frame_ms": 1169,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

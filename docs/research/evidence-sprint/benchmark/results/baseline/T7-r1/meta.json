@@ -1,0 +1,17 @@
+{
+  "task": "T7",
+  "run": 1,
+  "fixture": "platform",
+  "prompt": "Stop Claude from reading or editing anything under infra/prod/.",
+  "claudeVersion": "2.1.283 (Claude Code)",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 17548,
+  "costUsd": 0.06561020000000001,
+  "turns": 4,
+  "isError": false,
+  "finishedAt": "2026-09-27T12:17:58.291Z"
+}

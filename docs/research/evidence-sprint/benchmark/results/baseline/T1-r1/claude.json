@@ -1,0 +1,97 @@
+{
+  "duration_api_ms": 12346,
+  "stop_reason": "end_turn",
+  "session_id": "bcc9d84a-0a34-4b2f-8a0f-015cf5b8fe03",
+  "total_cost_usd": 0.058911399999999996,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 4150,
+    "cache_read_input_tokens": 23397,
+    "output_tokens": 1050,
+    "output_tokens_details": {
+      "thinking_tokens": 25
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4150,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 330,
+        "cache_read_input_tokens": 7271,
+        "cache_creation_input_tokens": 464,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 464
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 1050,
+      "cacheReadInputTokens": 23397,
+      "cacheCreationInputTokens": 4150,
+      "webSearchRequests": 0,
+      "costUSD": 0.058911399999999996,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 25,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 6,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I added the `docs-writer` subagent in `.claude/agents/docs-writer.md`.\n\n- **Model:** `haiku`, the fastest of the model aliases. `release-manager` uses the same one.\n- **No shell access:** its `tools` list is `Read, Grep, Glob, Edit, Write`. It can't run shell commands because `Bash` isn't in that list.\n- **Instructions:** it only edits `.md` files under `docs/`, reads the code before describing it, keeps the docs' existing style, and writes secrets as `${VAR}`.\n\nThe limit to `docs/` is only an instruction in the agent's prompt. Nothing technically stops it from editing files elsewhere. If you want that enforced, I can add a hook that blocks its edits outside `docs/`.\n\nI didn't run `npm run lint` or `npm run build`. This change only adds an agent config file, so it doesn't touch the app code those check.",
+  "ttft_ms": 1993,
+  "type": "result",
+  "duration_ms": 12418,
+  "uuid": "62ee3d1a-ad62-4deb-9632-6ba22323f48b",
+  "ttft_stream_ms": 918,
+  "time_to_request_ms": 28,
+  "first_content_frame_ms": 918,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

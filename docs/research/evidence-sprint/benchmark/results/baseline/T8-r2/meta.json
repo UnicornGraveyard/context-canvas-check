@@ -1,0 +1,17 @@
+{
+  "task": "T8",
+  "run": 2,
+  "fixture": "platform",
+  "prompt": "The Terraform rule should only apply to files under infra/modules/.",
+  "claudeVersion": "2.1.283 (Claude Code)",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 7620,
+  "costUsd": 0.04078060000000001,
+  "turns": 3,
+  "isError": false,
+  "finishedAt": "2026-09-27T12:18:53.519Z"
+}

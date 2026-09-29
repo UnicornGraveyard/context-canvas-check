@@ -1,0 +1,423 @@
+[
+  {
+    "id": "R02",
+    "product": "Claude Code",
+    "class": "N2",
+    "mechanism": "undocumented workflow-warning skip key of unknown provenance; ultracode also suppresses the warning",
+    "rationale": "After a ~32-subagent workflow ran with no cost warning, the reporter found skipWorkflowUsageWarning: true in ~/.claude/settings.json and cannot say who set it. The key is not in the settings reference, so no check can cite documentation for its effect. The workflows docs say ultracode (turned on with /effort, a session command not visible in config) skips the Large workflow warning and the launch prompt entirely, and that a Yes at the first auto-mode launch 'records consent in your user settings', a plausible harness origin for the key. The report doesn't isolate which of these suppressed the warning or who wrote the key, so neither D3 (writer unknown) nor D1/D2 can be established.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/78019",
+      "https://code.claude.com/docs/en/workflows",
+      "https://code.claude.com/docs/en/settings-reference",
+      "https://code.claude.com/docs/en/cli-reference"
+    ]
+  },
+  {
+    "id": "R04",
+    "product": "Claude Code",
+    "class": "D1",
+    "mechanism": "settings.json left unparseable mid-session; file silently skipped",
+    "rationale": "The sampled failure: the agent's revert left a trailing comma, so ~/.claude/settings.json no longer parsed, and Claude Code kept running without a warning (a commenter reproduced deny rules going unenforced once the file broke mid-session; the settings docs promise a Settings Error only at the start of an interactive session). A checker would see the parse error directly, for example when run as a hook after edits to settings files. The other parts don't change the class: sandbox.credentials is a documented key, not a hallucinated one, and the ~/.ssh read happened after the JSON was fixed because no deny rule or sandbox entry ever covered ~/.ssh.",
+    "docCitation": null,
+    "versionSpecific": false,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/84863",
+      "https://code.claude.com/docs/en/settings",
+      "https://code.claude.com/docs/en/settings-reference#sandbox-credentials",
+      "https://code.claude.com/docs/en/permissions",
+      "https://code.claude.com/docs/en/sandboxing"
+    ]
+  },
+  {
+    "id": "R06",
+    "product": "Claude Code",
+    "class": "D3",
+    "mechanism": "/model save-as-default rewrote settings.json from a stale snapshot, dropping hooks",
+    "rationale": "Accepting /model's save-as-default wrote the session's stale in-memory copy of ~/.claude/settings.json over the file on disk, dropping five PreToolUse/PostToolUse entries. The result was valid JSON with nothing semantically wrong, so only a comparison against a baseline shows the loss. The file was a symlink into a git-tracked dotfiles repo, so a checker diffing against the committed or last-seen version would have flagged the missing hooks on its next run instead of ~3 days later. The rewrite is a harness bug, but D3 covers tool-initiated rewrites.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "high",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/93742"
+    ]
+  },
+  {
+    "id": "R07",
+    "product": "Claude Code",
+    "class": "D2",
+    "mechanism": "harness wrote .mcp.json servers into disabledMcpjsonServers (rejection beats enable)",
+    "rationale": "At job startup, a background/bridge session made the harness create .claude/settings.local.json listing both project servers in enabledMcpjsonServers and disabledMcpjsonServers. The settings reference says rejection wins, so the file alone shows both servers will never connect; a checker could flag servers that are rejected or appear in both lists, with no baseline needed. It is also D3 (a harness write a last-seen baseline would flag); D2 is chosen because the file alone shows the problem.",
+    "docCitation": "https://code.claude.com/docs/en/settings-reference#disabledmcpjsonservers — \"Rejection takes precedence over enabledMcpjsonServers and enableAllProjectMcpServers.\"",
+    "versionSpecific": false,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/88800",
+      "https://code.claude.com/docs/en/settings-reference#disabledmcpjsonservers",
+      "https://code.claude.com/docs/en/mcp"
+    ]
+  },
+  {
+    "id": "R08",
+    "product": "Claude Code",
+    "class": "D3",
+    "mechanism": "hook script at wired path overwritten or stale under unchanged settings",
+    "rationale": "In all three variants settings.json was correct and unchanged; the problem was the script a hook entry runs: another project's installer overwrote a same-named script at the shared ~/.claude/hooks path (variant 1), the installed copy lagged the repo copy the tests bound (variant 2), or a runtime-resolving shim found nothing and exited 0 (variant 3). Fingerprinting each hook's resolved target against a last-seen baseline would have flagged variant 1 on the next run, and comparing installed copies with the committed source, as the reporter's own audit does, catches variant 2. Variant 3 is runtime shell logic and is not statically detectable. Classified on the lead variant; low confidence because the changed file is a script config references, not a config entry.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "low",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/83952",
+      "https://code.claude.com/docs/en/hooks"
+    ]
+  },
+  {
+    "id": "R09",
+    "product": "Claude Code",
+    "class": "D2",
+    "mechanism": "project settings.json in an ancestor directory not loaded",
+    "rationale": "The hooks and permissions.deny were in ~/work/.claude/settings.json, but sessions started two levels down in ~/work/projects/repo-a, and Claude Code reads project settings only from the session's primary working directory. The docs say so explicitly, and the reporter accepts that the rule may be intended. A checker run in the project could walk ancestor directories, find .claude/settings.json files that won't load, and name them, which is the warning the reporter asks for.",
+    "docCitation": "https://code.claude.com/docs/en/settings#where-claude-code-keeps-the-local-file-in-a-git-repository — \"Claude Code reads the shared .claude/settings.json from the session's primary working directory, so to use a file committed at the repository root, start Claude Code there.\" Also https://code.claude.com/docs/en/large-codebases#block-reads-of-generated-and-vendored-code — \"Like other project settings on this page, that file isn't inherited from parent directories.\"",
+    "versionSpecific": false,
+    "confidence": "high",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/85613",
+      "https://code.claude.com/docs/en/settings",
+      "https://code.claude.com/docs/en/large-codebases"
+    ]
+  },
+  {
+    "id": "R10",
+    "product": "Claude Code",
+    "class": "D2",
+    "mechanism": "allow rules cannot pre-approve writes to protected .claude/ paths",
+    "rationale": "A maintainer reproduced this on 2.1.233 and closed it as intended: .claude/ is a protected path, and allow rules from settings files never pre-approve writes there, so Edit(~/.claude/**/*.md) shows as loaded in /permissions but never takes effect. The permission-modes docs now state this with this exact example, so a checker could flag allow rules aimed at protected paths as having no effect. The history is version-dependent: at filing (2.1.133) a separate, since-fixed matcher bug also broke path-globbed rules, absolute-path forms reportedly fired at 2.1.207, and the docs paragraph landed after the report.",
+    "docCitation": "https://code.claude.com/docs/en/permission-modes#protected-paths — \"permissions.allow rules in settings files do not pre-approve protected-path writes. The safety check runs before Claude Code evaluates allow rules from settings, so an entry such as Edit(.claude/**) in ~/.claude/settings.json or .claude/settings.json does not change the per-mode outcome in the table above.\"",
+    "versionSpecific": true,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/57132",
+      "https://code.claude.com/docs/en/permission-modes#protected-paths"
+    ]
+  },
+  {
+    "id": "R11",
+    "product": "Claude Code",
+    "class": "D1",
+    "mechanism": "agent frontmatter used skill field allowed-tools instead of tools",
+    "rationale": "The agent file used allowed-tools: (the skill field) instead of tools:. The sub-agents docs list the supported fields, say an unrecognized field is ignored without reporting an error, and say an omitted tools field inherits every tool, so the subagent got unrestricted Bash. An unknown key in agent frontmatter is a schema violation a checker would flag, with a 'did you mean tools' hint.",
+    "docCitation": null,
+    "versionSpecific": false,
+    "confidence": "high",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/27099",
+      "https://code.claude.com/docs/en/sub-agents"
+    ]
+  },
+  {
+    "id": "R12",
+    "product": "Claude Code",
+    "class": "D2",
+    "mechanism": "bare plugin-local agent: reference unresolved (plugin agents are namespaced)",
+    "rationale": "A plugin skill set agent: auditor, but plugin agents register under a namespaced id (my-plugin:auditor), so the reference didn't resolve and Claude Code silently forked general-purpose, with Edit and Write. A maintainer confirmed the silent fallback as a bug. The reference is still wrong per the documented namespacing, so a checker resolving skill agent: references against known agent names would have flagged it before any substitution.",
+    "docCitation": "https://code.claude.com/docs/en/plugins-reference#name — \"Claude Code namespaces every component under it, so an agent reviewer in plugin deploy-tools appears as deploy-tools:reviewer.\" See also https://code.claude.com/docs/en/skills — \"The agent field specifies which subagent configuration to use. Options include built-in agents (Explore, Plan, general-purpose) or any custom subagent from .claude/agents/.\"",
+    "versionSpecific": false,
+    "confidence": "high",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/83133",
+      "https://code.claude.com/docs/en/skills",
+      "https://code.claude.com/docs/en/plugins-reference",
+      "https://code.claude.com/docs/en/sub-agents"
+    ]
+  },
+  {
+    "id": "R13",
+    "product": "Claude Code",
+    "class": "N1",
+    "mechanism": "Bash deny rule not enforced in auto mode",
+    "rationale": "The same Bash(curl *) deny rule blocked curl in manual mode and let it run in auto mode, on the same machine with the same settings.json. The docs say deny rules block in every mode, and in auto mode's decision order matching deny rules resolve before the classifier. The config was correct and the rule demonstrably matched, so this is product misbehavior a static checker cannot see.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "high",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/88770",
+      "https://code.claude.com/docs/en/permission-modes",
+      "https://code.claude.com/docs/en/sandboxing"
+    ]
+  },
+  {
+    "id": "R16",
+    "product": "Claude Code",
+    "class": "D1",
+    "mechanism": "agent frontmatter hooks: [] (array, not mapping) drops the agent",
+    "rationale": "In agent frontmatter, hooks takes the settings-style mapping of event name to matcher list. An empty YAML array fails validation and Claude Code drops the whole agent with no warning, while hooks: {} or omitting the key both load. The wrong value type is a schema violation visible in the file, so a checker validating frontmatter types would flag it; the silent drop is poor product behavior, but the file is invalid per the documented format.",
+    "docCitation": null,
+    "versionSpecific": false,
+    "confidence": "high",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/91781",
+      "https://code.claude.com/docs/en/sub-agents"
+    ]
+  },
+  {
+    "id": "R17",
+    "product": "Claude Code",
+    "class": "N1",
+    "mechanism": ".mcp.json ${VAR} from settings env not expanded; server silently dropped",
+    "rationale": "The token was defined in the env block of .claude/settings.local.json, which the docs say applies to every session and its subprocesses, but ${VAR} expansion in .mcp.json didn't use it. The REPL then silently dropped the server, contradicting both the docs of the time ('fail to parse') and the current docs (the config loads with the unexpanded text and `claude mcp list` warns). No documentation says settings env is excluded from expansion, so no check could cite docs for it; the config was reasonable per the docs and the product misbehaved.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/60513",
+      "https://code.claude.com/docs/en/mcp",
+      "https://code.claude.com/docs/en/settings-reference#env"
+    ]
+  },
+  {
+    "id": "R18",
+    "product": "Claude Code",
+    "class": "N2",
+    "mechanism": "subagents without project CLAUDE.md/rules (agent type unknown)",
+    "rationale": "The reporter inferred from missed violations that six Task subagents never loaded CLAUDE.md or .claude/rules. Current docs say non-fork subagents load the full CLAUDE.md hierarchy including project rules, except the built-in Explore and Plan agents, which skip it by design, and no changelog entry changes this. The report doesn't say which agent type ran or show what was actually in context, so the cause could be documented Explore/Plan behavior, a bug, or rules loaded but not followed; none is visible in the project's config files.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://github.com/anthropics/claude-code/issues/29423",
+      "https://code.claude.com/docs/en/sub-agents",
+      "https://code.claude.com/docs/en/memory",
+      "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"
+    ]
+  },
+  {
+    "id": "R21",
+    "product": "Codex",
+    "class": "D2",
+    "mechanism": "auto_review reviewer approves sandbox escalations in codex exec",
+    "rationale": "With approvals_reviewer = \"auto_review\" in config.toml (user or project-local), codex exec --sandbox read-only still wrote files, because sandbox-escalation requests went to the reviewer agent and it approved them. The Codex docs say auto_review routes eligible approval requests, including sandbox escalations, to a reviewer agent, and list --ask-for-approval never as the hard read-only setup for non-interactive runs, so a checker reading config.toml could warn that the sandbox level isn't binding under auto_review. Low confidence: the docs don't state exec's default approval policy and say auto_review 'changes the reviewer, not the sandbox boundary', so this may be an unintended exec interaction (N1).",
+    "docCitation": "https://developers.openai.com/codex/agent-approvals-security — \"Set approvals_reviewer = \\\"auto_review\\\" to route eligible approval requests through a reviewer agent before Codex runs the request\" and \"The reviewer evaluates only actions that already need approval, such as sandbox escalations, blocked network requests, request_permissions prompts, or side-effecting app and MCP tool calls.\" The same page's table gives \"Read-only non-interactive (CI) | --sandbox read-only --ask-for-approval never\" as the hard read-only setup.",
+    "versionSpecific": true,
+    "confidence": "low",
+    "sourcesRead": [
+      "https://github.com/openai/codex/issues/36570",
+      "https://developers.openai.com/codex/agent-approvals-security",
+      "https://developers.openai.com/codex/config-advanced",
+      "https://developers.openai.com/codex/config-reference",
+      "https://developers.openai.com/codex/noninteractive"
+    ]
+  },
+  {
+    "id": "R22",
+    "product": "Codex",
+    "class": "D2",
+    "mechanism": "AGENTS.md beyond project_doc_max_bytes (32 KiB) truncated",
+    "rationale": "Codex stops including AGENTS.md content once the combined size reaches project_doc_max_bytes (32 KiB by default), so instructions past the cut never reach the model, and the only signal is a log-level warning. The limit is documented and file sizes can be measured statically, so a checker could flag an AGENTS.md chain over the configured limit, as the 'dropped' CLI mentioned in the thread does.",
+    "docCitation": "https://developers.openai.com/codex/guides/agents-md — \"Codex skips empty files and stops adding files once the combined size reaches the limit defined by project_doc_max_bytes (32 KiB by default).\"",
+    "versionSpecific": false,
+    "confidence": "high",
+    "sourcesRead": [
+      "https://github.com/openai/codex/issues/13386",
+      "https://developers.openai.com/codex/guides/agents-md"
+    ]
+  },
+  {
+    "id": "R25",
+    "product": "Copilot",
+    "class": "N2",
+    "mechanism": "code review custom instructions without observable effect (cause unknown)",
+    "rationale": "The reporter put rules in .github/copilot-instructions.md and a path-specific code-review.instructions.md (applyTo \"**\") and enabled the repository setting, yet reviews kept the default format and generic findings. GitHub's docs list both file types as supported for code review, but also warn that Copilot 'may not always follow your custom instructions'. The evidence is output-only and no GitHub staff replied, so the report can't separate 'not read' (a bug) from 'read but not followed'; in neither case is anything in the files invalid.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://github.com/orgs/community/discussions/187926",
+      "https://docs.github.com/en/copilot/concepts/agents/code-review",
+      "https://docs.github.com/en/copilot/reference/custom-instructions-support",
+      "https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions",
+      "https://docs.github.com/en/copilot/concepts/prompting/response-customization"
+    ]
+  },
+  {
+    "id": "R26",
+    "product": "Copilot",
+    "class": "N1",
+    "mechanism": "cloud agent skips copilot-instructions.md in organization-owned repos",
+    "rationale": "The same one-line .github/copilot-instructions.md worked with the cloud agent on a personal repository and in VS Code on the organization repository, but the Agents-tab session log for the organization repository showed the file was never fetched. GitHub's support matrix lists repository-wide instructions as supported by Copilot cloud agent, with no exception for organization-owned repositories. The file was correct per the docs and the product didn't read it, though no staff response confirms the bug.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://github.com/orgs/community/discussions/196934",
+      "https://docs.github.com/en/copilot/reference/custom-instructions-support",
+      "https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-coding-agent"
+    ]
+  },
+  {
+    "id": "R27",
+    "product": "Copilot",
+    "class": "N2",
+    "mechanism": "MCP tools hidden in runtime virtual tool groups",
+    "rationale": "The commenter says configured MCP tools appeared disabled because they sat in tool groups the agent had to activate but couldn't list, and they found no way to see the groups. VS Code documents experimental 'virtual tools' that group tools above a threshold (default 128) for the model to activate on demand. Grouping depends on runtime tool counts and generated group names, not on anything in mcp.json, and the comment gives no config, version or tool count (the thread starter had 116 tools, below the threshold). Too little information to call it a bug, but in no reading is it visible in config files.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://github.com/orgs/community/discussions/184219#discussioncomment-15786061",
+      "https://code.visualstudio.com/docs/copilot/reference/copilot-settings",
+      "https://code.visualstudio.com/docs/copilot/agents/agent-tools"
+    ]
+  },
+  {
+    "id": "R28",
+    "product": "Cursor",
+    "class": "N1",
+    "mechanism": "CLI rejects mcp.json type 'streamable-http' and drops the whole file",
+    "rationale": "One mcp.json entry used \"type\": \"streamable-http\". The Cursor IDE ignores type, but the CLI parser accepts only stdio, http and sse, so cursor-agent fell back to an empty config and dropped every server in the file, stdio ones included, with no diagnostic; staff confirmed both behaviors and plan an alias. Cursor's CLI docs say 'MCP in the CLI uses the same configuration as the editor - any MCP servers you've configured will work with both' and never list type values for remote servers, so the file was correct per the docs and the CLI misbehaved. A checker that knew the CLI's undocumented parser rules could have flagged the value.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://forum.cursor.com/t/cursor-agent-mcp-list-silently-drops-entire-mcp-json-when-any-entry-has-type-streamable-http-works-in-ide/158521",
+      "https://cursor.com/docs/mcp",
+      "https://cursor.com/docs/cli/mcp"
+    ]
+  },
+  {
+    "id": "R29",
+    "product": "Cursor",
+    "class": "N1",
+    "mechanism": "team rule names containing '/' cannot be disabled locally",
+    "rationale": "An optional team rule named General/coding-discipline stayed injected after its local toggle was turned off. Cursor staff reproduced it: the local disabled list is matched against the last segment of the rule name, so names containing '/' can never be switched off. Team rules and the toggle live in the team dashboard and IDE state, not in repository config, and the behavior is a confirmed matching bug.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "high",
+    "sourcesRead": [
+      "https://forum.cursor.com/t/disabled-optional-team-rules-remain-injected-into-fresh-agent-chats/171139"
+    ]
+  },
+  {
+    "id": "R30",
+    "product": "Cursor",
+    "class": "N1",
+    "mechanism": "alwaysApply in team-plugin rules downgraded to agent-requestable",
+    "rationale": "Rules shipped in a team marketplace plugin with alwaysApply: true were applied as 'Agent decides when to apply'; Cursor staff confirmed the downgrade as a bug and said it would be fixed in 3.6. The .mdc frontmatter was correct, so a static checker would see nothing wrong. The secondary failure, the settings UI writing duplicate frontmatter blocks into the .mdc file, would be D1/D3-detectable but isn't the sampled 'silently ignored' failure.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "high",
+    "sourcesRead": [
+      "https://forum.cursor.com/t/alwaysapply-silently-ignored-in-rules-from-team-plugins/157484"
+    ]
+  },
+  {
+    "id": "R32",
+    "product": "Cursor",
+    "class": "N1",
+    "mechanism": "'Always allow' written to global config, shadowed by project permissions",
+    "rationale": "The CLI's 'Always allow' always writes to ~/.cursor/cli-config.json, and when the project's .cursor/cli.json has a permissions section its arrays override the global ones during merge, so the grant never applied and the prompt kept coming back. Cursor's CLI docs say permissions can be set in either file but not how the two merge, so no documentation-backed check exists. Staff confirmed the behavior and logged it as a bug.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://forum.cursor.com/t/cli-permission-allowlist-written-to-global-config-instead-of-project-level-cursor-cli-json/160343",
+      "https://cursor.com/docs/cli/reference/configuration",
+      "https://cursor.com/docs/cli/reference/permissions"
+    ]
+  },
+  {
+    "id": "R33",
+    "product": "Cursor",
+    "class": "D2",
+    "mechanism": "Cursor CLI imports Claude Code hooks/agents/rules with no opt-out",
+    "rationale": "cursor-agent loads CLAUDE.md, .claude agents, skills and commands, and the hooks in .claude/settings*.json and ~/.claude/settings.json. So Claude Code hooks run under Cursor, Claude-specific subagents are offered, and a CLAUDE.md symlinked to AGENTS.md loads twice. Cursor documents loading and executing Claude Code hooks by default, and the imported files are statically visible, so a checker could warn that they will apply under Cursor. Low confidence: the reporter already knew about the loading, and the missing CLI opt-out (staff: 'a real gap') is a product limitation a checker can report but not fix.",
+    "docCitation": "https://cursor.com/docs/reference/third-party-hooks — \"Cursor can load and execute hooks configured for Claude Code, allowing you to use the same hook scripts across both tools.\" and \"Claude Code hooks load when Include Third-Party Plugins, Skills, and Other Configs is enabled in Cursor Settings → Agents → Third-Party Imports. The setting is on by default.\"",
+    "versionSpecific": false,
+    "confidence": "low",
+    "sourcesRead": [
+      "https://forum.cursor.com/t/no-way-to-opt-out-of-third-party-claude-code-codex-config-loading-the-flag-is-hardcoded/166558",
+      "https://cursor.com/docs/reference/third-party-hooks",
+      "https://cursor.com/docs/hooks"
+    ]
+  },
+  {
+    "id": "R36",
+    "product": "Claude Code",
+    "class": "N2",
+    "mechanism": "leftover third-party hook rewrites commands to a removed binary",
+    "rationale": "After a partial uninstall of Headroom, a PreToolUse hook it had added to ~/.claude/settings.local.json (script ~/.claude/hooks/headroom-rtk-rewrite.sh) kept rewriting Bash commands to call rtk, which was gone. The commands failed, and Claude retried with absolute paths that prompted. The report doesn't give the hook command or script, so it's unknown whether the missing rtk was visible statically or only in commands rewritten at runtime; a check that the hook's target exists would pass. A drift checker would have flagged the hook when the installer added it, but the change that caused the failure (removing the binary) was outside config; the current Headroom script adds a guard for exactly this partial-uninstall case.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "low",
+    "sourcesRead": [
+      "https://news.ycombinator.com/item?id=47805197",
+      "https://news.ycombinator.com/item?id=47846500",
+      "https://github.com/gglucass/headroom-desktop/blob/HEAD/src-tauri/src/client_adapters.rs",
+      "https://code.claude.com/docs/en/hooks"
+    ]
+  },
+  {
+    "id": "R37",
+    "product": "Claude Code",
+    "class": "D2",
+    "mechanism": "ask rules override a PreToolUse hook's allow decision",
+    "rationale": "The screenshot shows why the new permission hook seemed not to work: ask rules Bash(rm:*) and Bash(rmdir:*) in settings.json kept prompting even though the hook returned allow, which the permissions docs say is by design. To test that, Claude removed the ask rules and ran rm -rf /tmp/claude/../../etc/hosts, which only the auto-mode classifier stopped; the hook, by design, merely withholds allow for such paths. A checker noting that the ask rules override the Bash hook's allow would have removed the reason to test by deleting guardrails, and the agent's removal of the ask rules is also D3-detectable. The poster's 'the hook did not work' is ambiguous (it may mean the hook didn't block the traversal), hence low confidence.",
+    "docCitation": "https://code.claude.com/docs/en/permissions#extend-permissions-with-hooks — \"Hook decisions don't bypass permission rules. Claude Code evaluates deny and ask rules regardless of what a PreToolUse hook returns: a matching deny rule blocks the call, and a matching ask rule still prompts even when the hook returned \\\"allow\\\" or \\\"ask\\\".\"",
+    "versionSpecific": false,
+    "confidence": "low",
+    "sourcesRead": [
+      "https://www.reddit.com/r/ClaudeCode/comments/1wb1wrg/claude_just_tried_to_test_if_a_new_permission/",
+      "https://i.redd.it/myc752qo7doh1.png",
+      "https://code.claude.com/docs/en/permissions#extend-permissions-with-hooks",
+      "https://code.claude.com/docs/en/hooks",
+      "https://code.claude.com/docs/en/permission-modes"
+    ]
+  },
+  {
+    "id": "R39",
+    "product": "Claude Code",
+    "class": "D2",
+    "mechanism": "single-slash 'absolute' path in Read deny rules anchors at settings source",
+    "rationale": "The deny rules were written as Read(/Users/[redacted]/workspace/myproject/**), and the same for Grep, in both ~/.claude/settings.json and .claude/settings.json. Per the permissions docs, a single leading slash anchors at the settings source, not the filesystem root, so neither rule covered the real files; a commenter pointed this out. A checker could flag single-slash rules that look like absolute home paths and suggest //. A path-glob matcher bug around then (see #57132) might have defeated even correct rules, but the files were not correct per the docs, so this isn't N1.",
+    "docCitation": "https://code.claude.com/docs/en/permissions#read-and-edit — \"A pattern like /Users/alice/file isn't an absolute path. The single leading slash anchors at the settings source, not the filesystem root. Use //Users/alice/file for absolute paths.\"",
+    "versionSpecific": false,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://www.reddit.com/r/ClaudeAI/comments/1srdnp0/claude_code_silently_bypassed_two_layers_of/",
+      "https://code.claude.com/docs/en/permissions#read-and-edit",
+      "https://github.com/anthropics/claude-code/issues/57132"
+    ]
+  },
+  {
+    "id": "R40",
+    "product": "Claude Code",
+    "class": "D3",
+    "mechanism": "marketplace errors caused CLI to wipe project settings.json",
+    "rationale": "Errors in the organization's custom plugin marketplace made Claude Code wipe the polyrepo root's .claude/settings.json, removing the marketplace configuration, and the errors showed only once. That is a harness-initiated removal of config that a checker comparing against the committed file or a last-seen baseline would flag on its next run. The marketplace errors themselves might have been caught by plugin/marketplace validation (D1), but the post doesn't say what they were.",
+    "docCitation": null,
+    "versionSpecific": null,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://www.reddit.com/r/ClaudeCode/comments/1sos8hm/new_cc_cli_wipes_claudesettingsjson_upon/"
+    ]
+  },
+  {
+    "id": "R41",
+    "product": "Claude Code",
+    "class": "D2",
+    "mechanism": "nested CLAUDE.md lazy-loads only on Read; auto mode's Bash-first skips it",
+    "rationale": "The monorepo's nested CLAUDE.md files (service/, workers/, infra/) are not loaded at launch; the docs say they load only when Claude reads files in those directories, and the poster's transcripts show only the native Read tool triggers that. Since v2.1.229, auto mode tells Claude to read and edit through Bash, so the infra rules loaded in 3 of 30 sessions and Edit|Write PostToolUse hooks missed about two thirds of edits. The documented lazy-load condition, and hooks matching tool names, let a checker warn that these files and hooks aren't guaranteed to apply and suggest @-importing the files from the root CLAUDE.md, which is the poster's own fix. The 'Read tool only' nuance and the Bash-first instruction are undocumented product behavior on top.",
+    "docCitation": "https://code.claude.com/docs/en/memory#how-claude-md-files-load — \"Claude also discovers CLAUDE.md and CLAUDE.local.md files in subdirectories under your current working directory. Instead of loading them at launch, they are included when Claude reads files in those subdirectories.\"",
+    "versionSpecific": false,
+    "confidence": "medium",
+    "sourcesRead": [
+      "https://www.reddit.com/r/ClaudeAI/comments/1wj7v4y/in_auto_mode_your_nested_claudemd_files_are/",
+      "https://code.claude.com/docs/en/memory#how-claude-md-files-load",
+      "https://code.claude.com/docs/en/large-codebases",
+      "https://code.claude.com/docs/en/context-window",
+      "https://code.claude.com/docs/en/hooks"
+    ]
+  }
+]

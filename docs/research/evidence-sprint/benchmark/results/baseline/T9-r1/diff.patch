@@ -1,0 +1,13 @@
+diff --git a/.claude/agents/sre.md b/.claude/agents/sre.md
+index 2c7bf03..929b749 100644
+--- a/.claude/agents/sre.md
++++ b/.claude/agents/sre.md
+@@ -3,7 +3,7 @@ name: sre
+ description: Investigates incidents with logs, dashboards and the on-call runbook. Use when an alert fires.
+ tools: Read, Grep, Glob, Bash
+ disallowedTools: Edit, Write
+-model: opus
++model: sonnet
+ permissionMode: plan
+ mcpServers:
+   - pagerduty

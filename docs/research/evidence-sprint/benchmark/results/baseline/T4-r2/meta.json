@@ -1,0 +1,17 @@
+{
+  "task": "T4",
+  "run": 2,
+  "fixture": "webapp",
+  "prompt": "Make sure the reviewer agent can never modify files.",
+  "claudeVersion": "2.1.283 (Claude Code)",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 13243,
+  "costUsd": 0.060697400000000006,
+  "turns": 5,
+  "isError": false,
+  "finishedAt": "2026-09-27T12:15:44.098Z"
+}

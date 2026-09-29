@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "registered": "2026-09-27",
+  "runsPerTask": 3,
+  "claude": {
+    "permissionMode": "acceptEdits",
+    "allowedTools": ["Read", "Edit", "Write", "Glob", "Grep"],
+    "maxTurns": 25
+  },
+  "tasks": [
+    {
+      "id": "T1",
+      "fixture": "webapp",
+      "prompt": "Add a subagent called docs-writer that writes and updates the Markdown documentation under docs/. It must not be able to run shell commands. Use the fastest model.",
+      "expected": "A new .claude/agents/docs-writer.md with name docs-writer, a description, tools that include no Bash, and model haiku. Nothing else changes.",
+      "check": { "kind": "newAgent", "path": ".claude/agents/docs-writer.md", "name": "docs-writer", "models": ["haiku"], "forbiddenTools": ["Bash"] }
+    },
+    {
+      "id": "T2",
+      "fixture": "webapp",
+      "prompt": "Let Claude run `npm test` without asking for permission every time.",
+      "expected": "permissions.allow in .claude/settings.json (or .claude/settings.local.json) gains a rule for npm test only. Nothing else is loosened.",
+      "check": { "kind": "allowAdded", "files": [".claude/settings.json", ".claude/settings.local.json"], "accept": ["Bash(npm test)", "Bash(npm test:*)", "Bash(npm run test)", "Bash(npm run test:*)", "Bash(npm test *)", "Bash(npm run test *)"] }
+    },
+    {
+      "id": "T3",
+      "fixture": "webapp",
+      "prompt": "Add the Sentry MCP server to this project. It's a remote HTTP server at https://mcp.sentry.dev/mcp.",
+      "expected": "A new server in .mcp.json with type http and that URL. The github and postgres servers stay exactly as they were, including ${VAR} references. No permission is added for it.",
+      "check": { "kind": "mcpAdded", "namePattern": "sentry", "type": "http", "url": "https://mcp.sentry.dev/mcp" }
+    },
+    {
+      "id": "T4",
+      "fixture": "webapp",
+      "prompt": "Make sure the reviewer agent can never modify files.",
+      "expected": "The reviewer can no longer use Edit, Write, MultiEdit or NotebookEdit (removed from tools or listed in disallowedTools). Its other frontmatter (model, color, memory) and instructions stay.",
+      "check": { "kind": "agentToolsExcluded", "agent": "reviewer", "tools": ["Edit", "Write", "MultiEdit", "NotebookEdit"] }
+    },
+    {
+      "id": "T5",
+      "fixture": "webapp",
+      "prompt": "After Claude edits or writes a TypeScript file, format it with Prettier automatically.",
+      "expected": "A PostToolUse hook in .claude/settings.json whose matcher covers Edit and Write and whose command runs prettier. The existing PreToolUse guard hook and the permissions stay unchanged.",
+      "check": { "kind": "hookAdded", "event": "PostToolUse", "matcherIncludes": ["Edit", "Write"], "commandIncludes": "prettier" }
+    },
+    {
+      "id": "T6",
+      "fixture": "webapp",
+      "prompt": "Rename the release-notes skill to changelog.",
+      "expected": ".claude/skills/changelog/SKILL.md with name changelog and the same body and allowed-tools; the old directory is gone; release-manager's skills list says changelog.",
+      "check": { "kind": "skillRenamed", "from": "release-notes", "to": "changelog" }
+    },
+    {
+      "id": "T7",
+      "fixture": "platform",
+      "prompt": "Stop Claude from reading or editing anything under infra/prod/.",
+      "expected": "permissions.deny gains Read and Edit rules for infra/prod/**. The existing rules, defaultMode plan, disableBypassPermissionsMode, additionalDirectories, hooks and enabledMcpjsonServers stay.",
+      "check": { "kind": "denyAdded", "tools": ["Read", "Edit"], "pathPattern": "^(\\./|/)?infra/prod(/\\*\\*|/\\*|/)?$" }
+    },
+    {
+      "id": "T8",
+      "fixture": "platform",
+      "prompt": "The Terraform rule should only apply to files under infra/modules/.",
+      "expected": "The paths frontmatter of .claude/rules/terraform.md is narrowed to infra/modules/ (for example infra/modules/**/*.tf). The rule body stays.",
+      "check": { "kind": "rulePaths", "path": ".claude/rules/terraform.md", "prefix": "infra/modules/" }
+    },
+    {
+      "id": "T9",
+      "fixture": "platform",
+      "prompt": "Use Sonnet for the sre agent instead of Opus, and keep everything else as it is.",
+      "expected": "The sre agent's model is sonnet (or a full Sonnet model ID). tools, disallowedTools, permissionMode, mcpServers, color and the instructions stay.",
+      "check": { "kind": "agentModel", "agent": "sre", "modelPattern": "^(sonnet|claude-sonnet-.*)$" }
+    },
+    {
+      "id": "T10",
+      "fixture": "platform",
+      "prompt": "We no longer use the internal-docs MCP server. Remove it.",
+      "expected": "internal-docs is gone from .mcp.json, and nothing still refers to it: not the sre agent's mcpServers, and not enabledMcpjsonServers. pagerduty stays exactly as it was.",
+      "check": { "kind": "mcpRemoved", "name": "internal-docs" }
+    }
+  ]
+}

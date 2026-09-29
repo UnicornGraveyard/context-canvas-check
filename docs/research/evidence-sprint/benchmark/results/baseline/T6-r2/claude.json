@@ -1,0 +1,97 @@
+{
+  "duration_api_ms": 16388,
+  "stop_reason": "end_turn",
+  "session_id": "d08a260f-be52-46ca-aa03-b4da7482f4d0",
+  "total_cost_usd": 0.08006640000000001,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 5142,
+    "cache_read_input_tokens": 23892,
+    "output_tokens": 1706,
+    "output_tokens_details": {
+      "thinking_tokens": 155
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5142,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 331,
+        "cache_read_input_tokens": 7501,
+        "cache_creation_input_tokens": 1226,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1226
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 1706,
+      "cacheReadInputTokens": 23892,
+      "cacheCreationInputTokens": 5142,
+      "webSearchRequests": 0,
+      "costUSD": 0.08006640000000001,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 155,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I've added the skill under its new name, but the old copy still needs deleting. I don't have a shell here, so I couldn't move or remove the old directory. Until it's gone, both skills will load. To finish the rename, run:\n\n```sh\ngit rm -r .claude/skills/release-notes\n```\n\n**Changes made:**\n- **`.claude/skills/changelog/SKILL.md`**: created with `name: changelog` and the heading changed to `# Changelog`. Everything else is copied from the old skill unchanged.\n- **`.claude/agents/release-manager.md`**: its `skills:` list now uses `changelog` instead of `release-notes`.\n- **`CLAUDE.md`**: the release-manager line now refers to the changelog skill.\n\nNothing else in the repo mentioned `release-notes`. I didn't run `npm run lint` or `npm run build`, which CLAUDE.md asks for, because I can't run commands here. This change only touches Claude config and markdown, so the app code isn't affected.",
+  "ttft_ms": 2371,
+  "type": "result",
+  "duration_ms": 16468,
+  "uuid": "e5981796-6f60-4fb9-9916-e216f2a4e397",
+  "ttft_stream_ms": 840,
+  "time_to_request_ms": 22,
+  "first_content_frame_ms": 841,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

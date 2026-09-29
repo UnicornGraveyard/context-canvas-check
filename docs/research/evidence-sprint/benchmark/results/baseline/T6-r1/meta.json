@@ -1,0 +1,17 @@
+{
+  "task": "T6",
+  "run": 1,
+  "fixture": "webapp",
+  "prompt": "Rename the release-notes skill to changelog.",
+  "claudeVersion": "2.1.283 (Claude Code)",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 16382,
+  "costUsd": 0.0786624,
+  "turns": 10,
+  "isError": false,
+  "finishedAt": "2026-09-27T12:17:06.288Z"
+}

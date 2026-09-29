@@ -1,0 +1,53 @@
+{
+  "name": "context-canvas-check",
+  "version": "0.1.0",
+  "description": "Checks whether a Claude Code configuration actually applies: agent files Claude Code skips, settings it ignores, rules that don't protect what they look like they protect, and what changed since last time. A CLI, a Claude Code plugin, and an MCP server for any coding agent.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ianmacdowell13-byte/context-canvas-check.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/ianmacdowell13-byte/context-canvas-check#readme",
+  "bugs": {
+    "url": "https://github.com/ianmacdowell13-byte/context-canvas-check/issues"
+  },
+  "type": "module",
+  "bin": {
+    "context-canvas-check": "./dist/context-canvas.mjs"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "claude-code",
+    "claude",
+    "agents",
+    "configuration",
+    "lint",
+    "mcp",
+    "mcp-server",
+    "model-context-protocol"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "prepublishOnly": "node build.mjs",
+    "typecheck": "tsc --noEmit -p .",
+    "test": "vitest --run"
+  },
+  "devDependencies": {
+    "@context-canvas/core": "workspace:*",
+    "@modelcontextprotocol/sdk": "1.31.0",
+    "@types/node": "25.3.0",
+    "esbuild": "0.27.3",
+    "zod": "4.3.6"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "context-canvas",
+  "description": "Claude Code plugins from Context Canvas.",
+  "owner": { "name": "Context Canvas" },
+  "plugins": [
+    {
+      "name": "context-canvas-check",
+      "source": "./packages/cli/plugin",
+      "description": "Tells you and Claude when agent configuration won't apply as written: files Claude Code skips, settings it ignores, and hooks or permissions that changed since your last session."
+    }
+  ]
+}

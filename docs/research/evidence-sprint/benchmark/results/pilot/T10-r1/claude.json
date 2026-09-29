@@ -1,0 +1,97 @@
+{
+  "duration_api_ms": 14632,
+  "stop_reason": "end_turn",
+  "session_id": "71ea89d0-2867-40b3-b3f8-c37c1398f14b",
+  "total_cost_usd": 0.0776952,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 5394,
+    "cache_read_input_tokens": 24156,
+    "output_tokens": 1484,
+    "output_tokens_details": {
+      "thinking_tokens": 72
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5394,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 363,
+        "cache_read_input_tokens": 7933,
+        "cache_creation_input_tokens": 1046,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1046
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 1484,
+      "cacheReadInputTokens": 24156,
+      "cacheCreationInputTokens": 5394,
+      "webSearchRequests": 0,
+      "costUSD": 0.0776952,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 72,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 9,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I removed the `internal-docs` MCP server from the three places that referenced it:\n\n- **`.mcp.json`**: deleted the server definition.\n- **`.claude/settings.json`**: removed it from `enabledMcpjsonServers`, leaving `[\"pagerduty\"]`.\n- **`.claude/agents/sre.md`**: removed it from the sre agent's `mcpServers` list.\n\nI didn't run `make lint` or `make test`. This only touched Claude config files, not the Terraform or Go code, and I have no shell tool in this session. Run them yourself if you want the usual check before finishing.\n\nTwo related things I left alone:\n\n- **Permission rule:** `.claude/settings.json` still allows `WebFetch(domain:docs.internal.example.com)`. That's a separate web-fetch permission, not the MCP server. Remove it too if the docs site itself is gone.\n- **SRE agent instructions:** Step 1 in the sre agent still says \"Read the alert and the runbook in docs.\" It probably used the MCP server for that, so you may want to reword it to say where the runbook lives now.",
+  "ttft_ms": 2310,
+  "type": "result",
+  "duration_ms": 14742,
+  "uuid": "d81b44c4-fb36-4564-8026-dbb51b71b756",
+  "ttft_stream_ms": 722,
+  "time_to_request_ms": 24,
+  "first_content_frame_ms": 722,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

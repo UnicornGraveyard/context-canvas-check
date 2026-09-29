@@ -1,0 +1,17 @@
+{
+  "task": "T3",
+  "run": 1,
+  "fixture": "webapp",
+  "prompt": "Add the Sentry MCP server to this project. It's a remote HTTP server at https://mcp.sentry.dev/mcp.",
+  "claudeVersion": "2.1.283 (Claude Code)",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 10583,
+  "costUsd": 0.0479422,
+  "turns": 4,
+  "isError": false,
+  "finishedAt": "2026-09-27T12:14:52.986Z"
+}

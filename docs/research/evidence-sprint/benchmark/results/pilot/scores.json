@@ -1,0 +1,48 @@
+{
+  "label": "pilot",
+  "scoredAt": "2026-09-27T12:12:38.278Z",
+  "runs": [
+    {
+      "task": "T2",
+      "run": 1,
+      "failed": false,
+      "findings": {
+        "F1": [],
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "REVIEW": []
+      },
+      "costUsd": 0.0459846,
+      "turns": 4,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "claudeVersion": "2.1.283 (Claude Code)",
+      "prompts": 1,
+      "denials": 0,
+      "finalMessage": "I added `\"Bash(npm test)\"` to `permissions.allow` in `.claude/settings.json`, next to the existing lint and build entries. Claude can now run `npm test` without asking.\n\n- **Only the exact command is covered.** Adding arguments, as in `npm test -- src/foo.test.ts`, will still ask for permission. To allow those too, change the entry to `\"Bash(npm test:*)\"`.\n- **It applies to everyone on the project.** This settings file is checked into the repo, so the rule applies to anyone who uses it. If you only want it for yourself, I can move it to `.claude/settings.local.json` instead."
+    },
+    {
+      "task": "T10",
+      "run": 1,
+      "failed": false,
+      "findings": {
+        "F1": [],
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "REVIEW": []
+      },
+      "costUsd": 0.0776952,
+      "turns": 9,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "claudeVersion": "2.1.283 (Claude Code)",
+      "prompts": 3,
+      "denials": 0,
+      "finalMessage": "I removed the `internal-docs` MCP server from the three places that referenced it:\n\n- **`.mcp.json`**: deleted the server definition.\n- **`.claude/settings.json`**: removed it from `enabledMcpjsonServers`, leaving `[\"pagerduty\"]`.\n- **`.claude/agents/sre.md`**: removed it from the sre agent's `mcpServers` list.\n\nI didn't run `make lint` or `make test`. This only touched Claude config files, not the Terraform or Go code, and I have no shell tool in this session. Run them yourself if you want the usual check before finishing.\n\nTwo related things I left alone:\n\n- **Permission rule:** `.claude/settings.json` still allows `WebFetch(domain:docs.internal.example.com)`. That's a separate web-fetch permission, not the MCP server. Remove it too if the docs site itself is gone.\n- **SRE agent instructions:** Step 1 in the sre agent still says \"Read the alert and the runbook in docs.\" It probably used the MCP server for that, so you may want to reword it to say where the runbook lives now."
+    }
+  ]
+}

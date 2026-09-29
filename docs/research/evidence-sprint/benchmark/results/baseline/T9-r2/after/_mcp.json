@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "pagerduty": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@pagerduty/mcp-server"],
+      "env": {
+        "PAGERDUTY_API_TOKEN": "${PAGERDUTY_API_TOKEN}"
+      }
+    },
+    "internal-docs": {
+      "type": "http",
+      "url": "https://docs.internal.example.com/mcp",
+      "headers": {
+        "X-Api-Key": "${DOCS_API_KEY}"
+      }
+    }
+  }
+}

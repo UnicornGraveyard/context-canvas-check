@@ -1,0 +1,97 @@
+{
+  "duration_api_ms": 17650,
+  "stop_reason": "end_turn",
+  "session_id": "15d607c6-a5e4-48eb-b34a-74987903fa6f",
+  "total_cost_usd": 0.08521580000000001,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 5387,
+    "cache_read_input_tokens": 23939,
+    "output_tokens": 1865,
+    "output_tokens_details": {
+      "thinking_tokens": 316
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5387,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 371,
+        "cache_read_input_tokens": 7696,
+        "cache_creation_input_tokens": 1276,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1276
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 1865,
+      "cacheReadInputTokens": 23939,
+      "cacheCreationInputTokens": 5387,
+      "webSearchRequests": 0,
+      "costUSD": 0.08521580000000001,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 316,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 8,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I added a hook that runs Prettier whenever I edit or write a TypeScript file. I haven't tested it, and it won't format anything until Prettier is installed in the project.\n\n**What changed:**\n- **`.claude/settings.json`**: added a hook that runs after every Edit or Write, next to your existing `block-rm` hook.\n- **`.claude/hooks/format-ts.mjs`**: the new script. It only acts on `.ts`, `.tsx`, `.mts` and `.cts` files and runs `npx --no-install prettier --write <file>` on them. If Prettier fails, the error is shown but the edit still goes through.\n\n**To make it work:** Prettier isn't in `package.json`. I set it up so it never downloads Prettier by itself, which would be slow on every edit. Until you install it, every TypeScript edit will show a \"Prettier failed\" message. To install it:\n\n```sh\nnpm install --save-dev prettier\n```\n\nYou may also want a `.prettierrc`; without one, Prettier uses its default style.\n\nI didn't run `npm run lint` or `npm run build`, since this change doesn't touch any app code.",
+  "ttft_ms": 1884,
+  "type": "result",
+  "duration_ms": 17850,
+  "uuid": "98e1711d-5b8f-4b8d-a9c8-2272169c38d3",
+  "ttft_stream_ms": 934,
+  "time_to_request_ms": 159,
+  "first_content_frame_ms": 934,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

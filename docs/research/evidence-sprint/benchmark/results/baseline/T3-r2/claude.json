@@ -1,0 +1,97 @@
+{
+  "duration_api_ms": 8598,
+  "stop_reason": "end_turn",
+  "session_id": "55920442-b420-4b6d-99f2-2308c25a2407",
+  "total_cost_usd": 0.0474628,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 3529,
+    "cache_read_input_tokens": 22694,
+    "output_tokens": 733,
+    "output_tokens_details": {
+      "thinking_tokens": 28
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3529,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 224,
+        "cache_read_input_tokens": 6659,
+        "cache_creation_input_tokens": 455,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 455
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 733,
+      "cacheReadInputTokens": 22694,
+      "cacheCreationInputTokens": 3529,
+      "webSearchRequests": 0,
+      "costUSD": 0.0474628,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 28,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 4,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I added a `sentry` entry to the project's `.mcp.json`, next to the existing `github` and `postgres` servers:\n\n```json\n\"sentry\": {\n  \"type\": \"http\",\n  \"url\": \"https://mcp.sentry.dev/mcp\"\n}\n```\n\nI didn't add a token or header. Sentry's remote server logs you in through your browser (OAuth) instead of using an API key. So in Claude Code, run `/mcp`, pick `sentry` and sign in. Claude Code will also ask you to approve the project-level server the first time it loads.\n\nI didn't run `npm run lint` or `npm run build`, because this change is only to the MCP config and doesn't affect the app code.",
+  "ttft_ms": 1789,
+  "type": "result",
+  "duration_ms": 8666,
+  "uuid": "ad2323b5-ee18-41aa-9cb7-4692bc3bee0a",
+  "ttft_stream_ms": 611,
+  "time_to_request_ms": 22,
+  "first_content_frame_ms": 612,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

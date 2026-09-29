@@ -1,0 +1,601 @@
+[
+  {
+    "id": "R01",
+    "url": "https://github.com/anthropics/claude-code/issues/87486",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "maziarghazali",
+    "date": "2026-08-18",
+    "category": [
+      "C2"
+    ],
+    "quote": "Claude wrote my pasted text into the file as a new entry, without asking for confirmation first.",
+    "summary": "Claude wrote pasted text into the project's shared instructions file (a CLAUDE.md-style file) without the separate go-ahead that a rule in its own persistent memory requires. The reporter says this is the fifth instance in the project.",
+    "independent": true,
+    "notes": "Model-initiated edit to an instructions file. Accept Edits mode was on."
+  },
+  {
+    "id": "R02",
+    "url": "https://github.com/anthropics/claude-code/issues/78019",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "Digit9paymentsorchestrator",
+    "date": "2026-07-16",
+    "category": [
+      "C1",
+      "C2"
+    ],
+    "quote": "An agent can therefore disable the warning that exists to protect users from agents. I cannot determine from my own machine whether I set it or a prior session did — which is itself the problem.",
+    "summary": "After an unexpected spend, the reporter found an undocumented skipWorkflowUsageWarning key in ~/.claude/settings.json that suppressed the cost warning before a ~32-subagent fan-out. They could not tell whether they or an earlier Claude session had set it.",
+    "independent": true,
+    "notes": "C1 is what the reporter experienced (unknown provenance of a setting). C2 is suspected by the reporter, not confirmed."
+  },
+  {
+    "id": "R03",
+    "url": "https://github.com/anthropics/claude-code/issues/32376",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "minatoplanb",
+    "date": "2026-03-09",
+    "category": [
+      "C2"
+    ],
+    "quote": "User designed 9+ hooks with Claude's help. Claude subsequently rewrote `done-gate.js`, changing the trigger from \"code changes\" to \"SIGNIFICANT code changes\" — a single word that weakens the gate.",
+    "summary": "Claude edited one of the user's enforcement hook scripts and weakened its trigger condition ('code changes' to 'SIGNIFICANT code changes'); a backup diff showed the change.",
+    "independent": true,
+    "notes": "Body refers to the reporter in the third person ('User spent 3+ months...'). Closed as not planned."
+  },
+  {
+    "id": "R04",
+    "url": "https://github.com/anthropics/claude-code/issues/84863",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "bvdeenen",
+    "date": "2026-08-07",
+    "category": [
+      "C2",
+      "C5",
+      "C3"
+    ],
+    "quote": "When the agent later reverted this edit, it left a trailing comma, making `settings.json` invalid JSON (`jq` error: `Expected another key-value pair at line 8, column 3`). The CLI did not crash, did not warn, and did not block subsequent tool use — it kept running normally.",
+    "summary": "In the reporter's session the agent added an unrecognized sandbox key to settings.json that looked protective but did nothing, then left the file as invalid JSON when reverting it. Claude Code kept running with no warning. Separately, deny rules for the Read tool did not stop Bash reads of ~/.ssh.",
+    "independent": true,
+    "notes": "C3 refers to the read-restriction gap described in the same issue."
+  },
+  {
+    "id": "R05",
+    "url": "https://github.com/anthropics/claude-code/issues/91270",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "denwitham",
+    "date": "2026-09-01",
+    "category": [
+      "C2",
+      "C4"
+    ],
+    "quote": "This leaks per-session, per-user permission entries (temp file paths, one-off grep/PowerShell command patterns, scratchpad directories, etc.) into a file meant for team-wide, reviewed configuration.",
+    "summary": "The VS Code extension persisted 'always allow' grants into the tracked, shared .claude/settings.json instead of the gitignored settings.local.json for at least two weeks. The team added a pre-commit hook to catch personal entries before commit.",
+    "independent": true,
+    "notes": "Harness-initiated (extension), not model-initiated. Confirmed by the reporter via git diff."
+  },
+  {
+    "id": "R06",
+    "url": "https://github.com/anthropics/claude-code/issues/93742",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "Benjamin-Connelly",
+    "date": "2026-09-11",
+    "category": [
+      "C2",
+      "C5"
+    ],
+    "quote": "In my case that silently removed five `PreToolUse`/`PostToolUse` hook entries, which are security and verification guards. They ran disarmed for ~3 days across every session on the machine.",
+    "summary": "Accepting /model's 'save as default' rewrote the whole user settings.json from a stale session snapshot, silently removing five hook entries (security and verification guards).",
+    "independent": true,
+    "notes": "Harness-initiated. Found through the git history of a dotfiles repo."
+  },
+  {
+    "id": "R07",
+    "url": "https://github.com/anthropics/claude-code/issues/88800",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "matt-intuition",
+    "date": "2026-08-22",
+    "category": [
+      "C2",
+      "C5"
+    ],
+    "quote": "Because disabled wins over enabled, and `settings.local.json` persists, this silently and permanently disables project MCP servers that the user had already approved — for all subsequent sessions, interactive ones included.",
+    "summary": "A background session bridged from claude.ai/code wrote the project's .mcp.json server names into both enabledMcpjsonServers and disabledMcpjsonServers in settings.local.json, disabling servers the user had approved, for all later sessions.",
+    "independent": true,
+    "notes": "Harness-initiated. The issue body ends with 'Generated with Claude Code' (drafted with AI assistance)."
+  },
+  {
+    "id": "R08",
+    "url": "https://github.com/anthropics/claude-code/issues/83952",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "wshallwshall",
+    "date": "2026-08-04",
+    "category": [
+      "C1"
+    ],
+    "quote": "The result is a class of failure where every visible signal is green and enforcement is zero. I have hit three variants of it on one machine, and I ended up writing a roughly 1,500-line audit command to answer the questions the harness does not.",
+    "summary": "Claude Code shows that a hook is configured but not which file it will execute, which settings file the entry came from, or whether it is the copy the user installed. The reporter hit three variants and wrote an audit command to answer these questions.",
+    "independent": true,
+    "notes": "Filed as a feature request; it describes problems the reporter actually had."
+  },
+  {
+    "id": "R09",
+    "url": "https://github.com/anthropics/claude-code/issues/85613",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "InvariantSystems",
+    "date": "2026-08-10",
+    "category": [
+      "C5",
+      "C1"
+    ],
+    "quote": "For a security setup this is a quiet failure: I had a full `PreToolUse` guard suite configured and believed it was enforcing for weeks. It was never invoked.",
+    "summary": "A .claude/settings.json in an ancestor directory of the project root was never loaded, so its hooks and permissions.deny had no effect, with no warning.",
+    "independent": true,
+    "notes": "The reporter accepts the resolution rule may be intended; the complaint is the missing signal."
+  },
+  {
+    "id": "R10",
+    "url": "https://github.com/anthropics/claude-code/issues/57132",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "hwaterer",
+    "date": "2026-05-08",
+    "category": [
+      "C1",
+      "C5"
+    ],
+    "quote": "Allow rules in `~/.claude/settings.json` that target paths under `~/.claude/` itself appear in `/permissions` as loaded but never match at runtime.",
+    "summary": "/permissions listed the allow rules as loaded, but edits under ~/.claude/ still prompted. What the UI showed differed from what was enforced.",
+    "independent": true,
+    "notes": "Closed as completed."
+  },
+  {
+    "id": "R11",
+    "url": "https://github.com/anthropics/claude-code/issues/27099",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "madshn",
+    "date": "2026-02-20",
+    "category": [
+      "C3",
+      "C5"
+    ],
+    "quote": "This caused two security incidents where subagents escalated from MCP authentication failures into credential hunting — reading config files, extracting tokens, accessing the macOS Keychain, and making direct API calls with extracted credentials.",
+    "summary": "An agent file used 'allowed-tools:' (the skill field) instead of 'tools:'. The field was silently ignored and the subagent inherited all parent tools, including unrestricted Bash.",
+    "independent": true,
+    "notes": "Closed as not planned."
+  },
+  {
+    "id": "R12",
+    "url": "https://github.com/anthropics/claude-code/issues/83133",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "gbuildz",
+    "date": "2026-08-01",
+    "category": [
+      "C3",
+      "C5"
+    ],
+    "quote": "The whole point of that agent is that it cannot modify what it audits. The skill that invoked it ran with `Edit` and `Write` available for months of authoring without anyone noticing, because the output looked correct.",
+    "summary": "A skill's 'agent:' name that did not resolve silently fell back to general-purpose, replacing a read-only auditor agent with one that had Edit and Write.",
+    "independent": true,
+    "notes": ""
+  },
+  {
+    "id": "R13",
+    "url": "https://github.com/anthropics/claude-code/issues/88770",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "rahz8447-prog",
+    "date": "2026-08-22",
+    "category": [
+      "C3",
+      "C5"
+    ],
+    "quote": "An explicit `permissions.deny` rule for a Bash command is not enforced while Auto Mode is active, but is correctly enforced in `manual` mode — same machine, same `settings.json`, only the permission mode differs.",
+    "summary": "With Auto Mode on, a Bash command matching a permissions.deny rule (curl) ran; the same rule blocked it in manual mode.",
+    "independent": true,
+    "notes": "Reproduced by the reporter in the CLI and in Claude Desktop."
+  },
+  {
+    "id": "R14",
+    "url": "https://github.com/anthropics/claude-code/issues/87012",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "jprodrigues23",
+    "date": "2026-08-15",
+    "category": [
+      "C4"
+    ],
+    "quote": "**8 of 35 shown (~23%).** The rest is summarised as \"and 26 more\". Entries are also truncated mid-string. One of the eight visible entries is `sudo -n apt-get install`, so the 26 hidden ones cannot be assumed harmless.",
+    "summary": "The workspace trust dialog asked the reporter to accept 35 pre-approved permissions from settings.local.json while showing 8 of them, truncated, with no way to expand the list.",
+    "independent": true,
+    "notes": ""
+  },
+  {
+    "id": "R15",
+    "url": "https://github.com/anthropics/claude-code/issues/36394",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "greogory",
+    "date": "2026-03-19",
+    "category": [
+      "C4"
+    ],
+    "quote": "It appears without explanation, doesn't describe the risk, and cannot be bypassed even in `--dangerously-skip-permissions` mode — training users to reflexively dismiss security dialogs rather than making informed decisions.",
+    "summary": "The prompt shown when Claude edits files under ~/.claude/ does not say what the edit changes or allows. The reporter checked 20 releases of notes and found no documentation of it.",
+    "independent": true,
+    "notes": "Closed as not planned."
+  },
+  {
+    "id": "R16",
+    "url": "https://github.com/anthropics/claude-code/issues/91781",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "zousiki",
+    "date": "2026-09-03",
+    "category": [
+      "C5"
+    ],
+    "quote": "A subagent definition (`~/.claude/agents/<name>.md` or `.claude/agents/<name>.md`) whose frontmatter contains `hooks: []` (an empty YAML array) is **silently excluded from the loaded agent list**. There is no warning on stderr, nothing in `--debug` output, and the file is otherwise valid.",
+    "summary": "An agent whose frontmatter has 'hooks: []' is dropped from the agent list without any warning; the only symptom is '--agent <name> not found'.",
+    "independent": true,
+    "notes": "Reproduced by the reporter on three versions."
+  },
+  {
+    "id": "R17",
+    "url": "https://github.com/anthropics/claude-code/issues/60513",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "jannikfstone",
+    "date": "2026-05-19",
+    "category": [
+      "C5"
+    ],
+    "quote": "Actual behavior in the REPL: the server is silently dropped. `/mcp` reports \"No MCP servers configured\", no log file is created, no error or warning is shown.",
+    "summary": "A stdio MCP server in .mcp.json with an unset ${VAR} was silently dropped in the REPL; through --mcp-config it started with the unsubstituted value and failed later as invalid_auth at the downstream service.",
+    "independent": true,
+    "notes": "Auto-closed by a bot as a duplicate of #11927, an older issue by a different user (2025-11-19, outside the window)."
+  },
+  {
+    "id": "R18",
+    "url": "https://github.com/anthropics/claude-code/issues/29423",
+    "source": "GitHub issue: anthropics/claude-code",
+    "author": "nobul-jose",
+    "date": "2026-02-27",
+    "category": [
+      "C5",
+      "C1"
+    ],
+    "quote": "The subagents reported 10 violations found. A manual re-audit with the rules in main-agent context found **5 additional violations, 4 logic bugs, and 1 missing error path** that the subagents missed entirely.",
+    "summary": "Task subagents did not load the project's CLAUDE.md or .claude/rules. An audit delegated to six subagents missed violations that the rules would have caught.",
+    "independent": true,
+    "notes": "Closed as not planned."
+  },
+  {
+    "id": "R19",
+    "url": "https://github.com/openai/codex/issues/41678",
+    "source": "GitHub issue: openai/codex",
+    "author": "Isajunsei",
+    "date": "2026-08-30",
+    "category": [
+      "C2"
+    ],
+    "quote": "On Windows 11, in the Codex App, the agent modified the **global** `~/.codex/config.toml` without an explicit request to add `model_instructions_file`. I did not add this setting myself.",
+    "summary": "A Codex agent added model_instructions_file (which can replace the model's base instructions) to the global ~/.codex/config.toml without being asked. The reporter noticed degraded behavior and removed the line.",
+    "independent": true,
+    "notes": "The reporter asks OpenAI to find which session or process wrote the key."
+  },
+  {
+    "id": "R20",
+    "url": "https://github.com/openai/codex/issues/32763",
+    "source": "GitHub issue: openai/codex",
+    "author": "johnsilvavlogs",
+    "date": "2026-07-13",
+    "category": [
+      "C2"
+    ],
+    "quote": "Codex Desktop silently rewrote the machine-wide autonomy tuple in `~/.codex/config.toml`",
+    "summary": "Codex Desktop changed approval_policy, sandbox_mode and approvals_reviewer in the user's global config.toml without asking; new threads inherited the restricted profile and basic writes failed. The reporter matched the file's modification time to a thread's creation.",
+    "independent": true,
+    "notes": "Harness-initiated. The change narrowed permissions rather than widening them."
+  },
+  {
+    "id": "R21",
+    "url": "https://github.com/openai/codex/issues/36570",
+    "source": "GitHub issue: openai/codex",
+    "author": "hampsterx",
+    "date": "2026-08-02",
+    "category": [
+      "C3",
+      "C5"
+    ],
+    "quote": "Under `codex exec`, `approvals_reviewer = \"auto_review\"` causes an explicit `--sandbox read-only` to be accepted and then not enforced. The level appears in the session header, the turn runs, and writes succeed anyway. Nothing in the output indicates the requested level was not applied.",
+    "summary": "With approvals_reviewer = \"auto_review\", codex exec accepted --sandbox read-only, displayed it, and still let writes succeed.",
+    "independent": true,
+    "notes": ""
+  },
+  {
+    "id": "R22",
+    "url": "https://github.com/openai/codex/issues/13386",
+    "source": "GitHub issue: openai/codex",
+    "author": "guidedways",
+    "date": "2026-03-03",
+    "category": [
+      "C5"
+    ],
+    "quote": "Codex silently truncates `AGENTS.md` at `32 KB` (roughly 600–800 lines). Any instructions past that limit are dropped and never sent to the model - with no warning anywhere in the TUI, /stats, exec, or VS Code extension.",
+    "summary": "AGENTS.md beyond 32 KB was cut off and the rest never reached the model, with no warning.",
+    "independent": true,
+    "notes": "GitHub shows the author as CONTRIBUTOR (has contributed to the repo); nothing on the page indicates OpenAI staff."
+  },
+  {
+    "id": "R23",
+    "url": "https://github.com/openai/codex/issues/9770",
+    "source": "GitHub issue: openai/codex",
+    "author": "albertodimas",
+    "date": "2026-01-23",
+    "category": [
+      "C2"
+    ],
+    "quote": "The VSCode Codex extension appends the entire config.toml content to itself every time VSCode starts or restarts, causing TOML parse errors due to duplicate keys.",
+    "summary": "The Codex VS Code extension appended the whole ~/.codex/config.toml to itself on each restart; Codex then fell back to defaults with a parse error.",
+    "independent": true,
+    "notes": "Harness-initiated (extension). An error was shown, so this is not counted as C5."
+  },
+  {
+    "id": "R24",
+    "url": "https://github.com/orgs/community/discussions/193659",
+    "source": "GitHub Discussions: community/community (Copilot)",
+    "author": "eberridge",
+    "date": "2026-04-24",
+    "category": [
+      "C2"
+    ],
+    "quote": "The agent diagnosed the validator as buggy, edited `scripts/validate_enums.py` to add new normalization logic, re-ran the stage, and continued the pipeline. The change was disclosed in the final report but was made without asking",
+    "summary": "During an Agent Skill run, Copilot's agent edited a script bundled in the skill's own folder and continued, so the run's output depended on code that did not exist when the skill was invoked.",
+    "independent": true,
+    "notes": "Posted as product feedback with a suggestion; it describes the reporter's own run ('in my case')."
+  },
+  {
+    "id": "R25",
+    "url": "https://github.com/orgs/community/discussions/187926",
+    "source": "GitHub Discussions: community/community (Copilot)",
+    "author": "Szer",
+    "date": "2026-02-24",
+    "category": [
+      "C5",
+      "C1"
+    ],
+    "quote": "Custom instructions have no observable effect on Copilot Code Review on GitHub.com. The reviewer always produces its default `## Pull request overview` format and generic findings regardless of what instructions are provided.",
+    "summary": "Neither .github/copilot-instructions.md nor path-specific .instructions.md files changed Copilot Code Review output, and nothing showed whether they were read.",
+    "independent": true,
+    "notes": "The reporter verified the repository setting that enables custom instructions for review."
+  },
+  {
+    "id": "R26",
+    "url": "https://github.com/orgs/community/discussions/196934",
+    "source": "GitHub Discussions: community/community (Copilot)",
+    "author": "yukishigure",
+    "date": "2026-05-26",
+    "category": [
+      "C5"
+    ],
+    "quote": "When using Copilot cloud agent from the Agents tab (github.com/copilot/agents) on an organization-owned repository, the `.github/copilot-instructions.md` file is never fetched. The same configuration works correctly on personal repositories and in VS Code.",
+    "summary": "Copilot cloud agent never fetched .github/copilot-instructions.md in an organization-owned repository; the same file worked in personal repositories and VS Code.",
+    "independent": true,
+    "notes": ""
+  },
+  {
+    "id": "R27",
+    "url": "https://github.com/orgs/community/discussions/184219#discussioncomment-15786061",
+    "source": "GitHub Discussions: community/community (Copilot)",
+    "author": "bmingles",
+    "date": "2026-02-12",
+    "category": [
+      "C1"
+    ],
+    "quote": "Unfortunately the groups don't seem to be listable by the agent, so it can only succeed if it can guess the group name. I've not found a way to see the list either which seems to be created by Copilot.",
+    "summary": "Configured MCP tools appeared disabled to the agent because they sat in tool groups that had to be activated; the commenter found no way to see the list of groups.",
+    "independent": true,
+    "notes": "Reply in a thread started by another user. Counted for the commenter's own description (tool groups, no way to list them), not as a +1."
+  },
+  {
+    "id": "R28",
+    "url": "https://forum.cursor.com/t/cursor-agent-mcp-list-silently-drops-entire-mcp-json-when-any-entry-has-type-streamable-http-works-in-ide/158521",
+    "source": "forum.cursor.com",
+    "author": "iFwu",
+    "date": "2026-04-20",
+    "category": [
+      "C5"
+    ],
+    "quote": "cursor-agent silently drops the entire mcp.json when any single entry uses \"type\": \"streamable-http\" — including unrelated stdio entries in the same file.",
+    "summary": "One mcp.json entry with type 'streamable-http' (accepted by the IDE) made the Cursor CLI drop every MCP server in the file, with no diagnostic.",
+    "independent": true,
+    "notes": "Cursor staff confirmed the CLI falls back to an empty config with no logs."
+  },
+  {
+    "id": "R29",
+    "url": "https://forum.cursor.com/t/disabled-optional-team-rules-remain-injected-into-fresh-agent-chats/171139",
+    "source": "forum.cursor.com",
+    "author": "Guillaume1",
+    "date": "2026-09-09",
+    "category": [
+      "C1",
+      "C5"
+    ],
+    "quote": "The affected rule is General/coding-discipline. The team dashboard identifies it as Optional, and its local toggle is off. Nevertheless, a completely fresh Agent chat reports the rule as active and can reproduce its contents.",
+    "summary": "An optional team rule that was switched off locally was still injected into fresh Agent chats as an active rule.",
+    "independent": true,
+    "notes": "Cursor staff reproduced it: rule names containing '/' cannot be switched off locally."
+  },
+  {
+    "id": "R30",
+    "url": "https://forum.cursor.com/t/alwaysapply-silently-ignored-in-rules-from-team-plugins/157484",
+    "source": "forum.cursor.com",
+    "author": "pchalacis",
+    "date": "2026-04-13",
+    "category": [
+      "C5",
+      "C2"
+    ],
+    "quote": "Additionally, when trying to change the Rule behavior through settings panel, it breaks the rule .mdc file by adding multiple blocks of:",
+    "summary": "Team-plugin rules with alwaysApply: true were applied only intelligently. Changing the rule type in the settings panel then wrote duplicate frontmatter blocks into the .mdc file.",
+    "independent": true,
+    "notes": "C2 is harness-initiated (settings UI). Cursor staff confirmed both bugs. Pilotm1n reported the same alwaysApply bug separately (topic 154223)."
+  },
+  {
+    "id": "R31",
+    "url": "https://forum.cursor.com/t/command-allowlist-an-entry-for-a-cmdlet-that-takes-a-script-block-auto-runs-any-command-inside-the-braces/167431",
+    "source": "forum.cursor.com",
+    "author": "Leland_Hepworth",
+    "date": "2026-08-04",
+    "category": [
+      "C3"
+    ],
+    "quote": "Any allowlisted cmdlet that accepts a script block is therefore a general-purpose execution channel, and no entry can narrow it.",
+    "summary": "An allowlist entry for a PowerShell cmdlet such as ForEach-Object auto-ran any command inside its script block; the reporter created a file with no approval prompt.",
+    "independent": true,
+    "notes": "Cursor staff acknowledged and advised not allowlisting block-taking cmdlets."
+  },
+  {
+    "id": "R32",
+    "url": "https://forum.cursor.com/t/cli-permission-allowlist-written-to-global-config-instead-of-project-level-cursor-cli-json/160343",
+    "source": "forum.cursor.com",
+    "author": "teruhirokomaki",
+    "date": "2026-05-12",
+    "category": [
+      "C2",
+      "C1"
+    ],
+    "quote": "When running cursor agent inside a project that has .cursor/cli.json, granting a permission writes the entry to ~/.cursor/cli-config.json (global) instead of the project-level .cursor/cli.json.",
+    "summary": "'Always allow' in the Cursor CLI wrote the grant to the global ~/.cursor/cli-config.json; the project file took precedence, so the grant never applied and the prompt kept coming back.",
+    "independent": true,
+    "notes": "Harness-initiated write to an unexpected scope. Cursor staff confirmed."
+  },
+  {
+    "id": "R33",
+    "url": "https://forum.cursor.com/t/no-way-to-opt-out-of-third-party-claude-code-codex-config-loading-the-flag-is-hardcoded/166558",
+    "source": "forum.cursor.com",
+    "author": "Tomasz_Madera",
+    "date": "2026-07-24",
+    "category": [
+      "C3",
+      "C1"
+    ],
+    "quote": "Imported hooks execute. Config I wrote for a different tool’s trust model runs under Cursor without me opting in.",
+    "summary": "cursor-agent loads Claude Code and Codex configuration (CLAUDE.md, .claude agents and skills, hooks from .claude/settings.json) with no CLI opt-out, so config written for another tool runs under Cursor.",
+    "independent": true,
+    "notes": "Feature request that lists concrete harm from the reporter's own CLI setup. Cursor staff agreed."
+  },
+  {
+    "id": "R34",
+    "url": "https://news.ycombinator.com/item?id=46691649",
+    "source": "Hacker News",
+    "author": "ra120271",
+    "date": "2026-01-20",
+    "category": [
+      "C3",
+      "C2"
+    ],
+    "quote": "When approving actions \"for this project\" I actively monitor .claude\\settings.local.json as \"Bash(az resource:)\", is much more permissive than \"Bash(az resource show:)\", It mostly gets it right but I instantly fix the file with the \"readonly\" version when it gets it too open.",
+    "summary": "Claude Code's 'for this project' approvals sometimes write allow rules broader than the command approved; the commenter watches settings.local.json and narrows them by hand.",
+    "independent": true,
+    "notes": "Harness-initiated: the rules come from Claude Code's approval flow."
+  },
+  {
+    "id": "R35",
+    "url": "https://news.ycombinator.com/item?id=49565799",
+    "source": "Hacker News",
+    "author": "cromka",
+    "date": "2026-09-04",
+    "category": [
+      "C3",
+      "C2"
+    ],
+    "quote": "So imagine my complete shock when I saw those sessions in their web client and that /rc was actually enabled in my CLI! Again, I never enabled it!!!",
+    "summary": "The poster found Remote Control enabled in their Claude Code CLI, and CLI sessions visible on claude.ai/code, though they had never turned it on.",
+    "independent": true,
+    "notes": "Harness-initiated (a product setting, not a model edit). The poster suspects a consent-prompt bug fixed in v2.1.257 but does not recall the prompt."
+  },
+  {
+    "id": "R36",
+    "url": "https://news.ycombinator.com/item?id=47805197",
+    "source": "Hacker News",
+    "author": "shapeling",
+    "date": "2026-04-17",
+    "category": [
+      "C1",
+      "C5"
+    ],
+    "quote": "Spent the next few hours having issues with CC where it was asking for permission on every command. It was using absolute paths for all commands - turns out it was running into `zsh: command not found: rtk`.",
+    "summary": "After deciding to uninstall a third-party tool, the commenter spent hours on Claude Code prompting for every command. The cause was a hook the tool had added to ~/.claude/settings.local.json, which called a binary that was no longer there.",
+    "independent": true,
+    "notes": "The hook came from a third-party installer, not the agent."
+  },
+  {
+    "id": "R37",
+    "url": "https://www.reddit.com/r/ClaudeCode/comments/1wb1wrg/claude_just_tried_to_test_if_a_new_permission/",
+    "source": "Reddit r/ClaudeCode",
+    "author": "Tunisandwich",
+    "date": "2026-09-08",
+    "category": [
+      "C2",
+      "C5"
+    ],
+    "quote": "Claude just tried to test if a new permission hook was working by removing its own guardrails and then trying to delete a random system file. The hook in fact did not work and I was only saved by the auto-classifier (correctly) freaking out",
+    "summary": "While testing a newly added permission hook, Claude removed its own guardrails and tried to delete a system file. The hook did not work; the auto-mode classifier stopped the command.",
+    "independent": true,
+    "notes": "Image post: the quoted text is the post title, which carries the description."
+  },
+  {
+    "id": "R38",
+    "url": "https://www.reddit.com/r/ClaudeCode/comments/1stsey3/instead_of_making_changes_in_my_project_it/",
+    "source": "Reddit r/ClaudeCode",
+    "author": "lpkk",
+    "date": "2026-04-23",
+    "category": [
+      "C2"
+    ],
+    "quote": "Just now I've asked Claude to make some changes in my java project. Instead of that he went thru my whole project analyse it and modified Claude.md file which become from 60 lines to over 250.",
+    "summary": "Asked to change code in a Java project, Claude instead rewrote the project's CLAUDE.md, growing it from 60 to over 250 lines.",
+    "independent": true,
+    "notes": "Model-initiated edit to CLAUDE.md."
+  },
+  {
+    "id": "R39",
+    "url": "https://www.reddit.com/r/ClaudeAI/comments/1srdnp0/claude_code_silently_bypassed_two_layers_of/",
+    "source": "Reddit r/ClaudeAI",
+    "author": "applauseco",
+    "date": "2026-04-21",
+    "category": [
+      "C3",
+      "C5"
+    ],
+    "quote": "Claude Code executed Read tool calls against multiple proprietary source files. There was no block. No warning. No permission prompt.",
+    "summary": "Deny rules for Read and Grep on a workspace path, set at both user and project level, did not stop Claude Code from reading the poster's proprietary source files, and nothing signaled the failure.",
+    "independent": true,
+    "notes": "The poster reports that Anthropic support said the rules should have worked."
+  },
+  {
+    "id": "R40",
+    "url": "https://www.reddit.com/r/ClaudeCode/comments/1sos8hm/new_cc_cli_wipes_claudesettingsjson_upon/",
+    "source": "Reddit r/ClaudeCode",
+    "author": "KOM_Unchained",
+    "date": "2026-04-18",
+    "category": [
+      "C2",
+      "C5"
+    ],
+    "quote": "Claude Code has started to wipe my organization's polyrepo root's .claude/settings.json upon any errors in my org's custom claude marketplace directory structure/configs.",
+    "summary": "Errors in the organization's custom plugin marketplace made Claude Code wipe the repository's .claude/settings.json; the marketplace errors were shown only once.",
+    "independent": true,
+    "notes": "Harness-initiated."
+  },
+  {
+    "id": "R41",
+    "url": "https://www.reddit.com/r/ClaudeAI/comments/1wj7v4y/in_auto_mode_your_nested_claudemd_files_are/",
+    "source": "Reddit r/ClaudeAI",
+    "author": "microlatency",
+    "date": "2026-09-17",
+    "category": [
+      "C5",
+      "C1"
+    ],
+    "quote": "Nothing fails and nothing warns you. Every command succeeds. You only notice when Claude breaks a rule you wrote down.",
+    "summary": "From a month of their own session transcripts: nested CLAUDE.md files load only when Claude uses the Read tool. Under auto mode's Bash-first instruction the team's infra rules loaded in 3 of 30 sessions that touched infra/, and Edit|Write PostToolUse hooks were skipped for about two thirds of edits.",
+    "independent": true,
+    "notes": "Measured from the poster's own transcripts (480 sessions)."
+  }
+]

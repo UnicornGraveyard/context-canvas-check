@@ -1,0 +1,97 @@
+{
+  "duration_api_ms": 7343,
+  "stop_reason": "end_turn",
+  "session_id": "248a59b3-0f09-4f4b-86e1-f042d1d44a42",
+  "total_cost_usd": 0.0429076,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 3421,
+    "cache_read_input_tokens": 22738,
+    "output_tokens": 548,
+    "output_tokens_details": {
+      "thinking_tokens": 45
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3421,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 213,
+        "cache_read_input_tokens": 6692,
+        "cache_creation_input_tokens": 314,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 314
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 548,
+      "cacheReadInputTokens": 22738,
+      "cacheCreationInputTokens": 3421,
+      "webSearchRequests": 0,
+      "costUSD": 0.0429076,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 45,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 4,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I switched the sre agent to Sonnet by changing `model: opus` to `model: sonnet` in `.claude/agents/sre.md:6`. Nothing else in that file changed, and I didn't touch the other agent (`infra-dev.md`).\n\nThe project instructions say to run `make lint` and `make test` before finishing, but I don't have a shell in this session, so I haven't run either one. This was a one-line config change and doesn't touch the Terraform or Go code, but run them yourself if you want the standard check.",
+  "ttft_ms": 1674,
+  "type": "result",
+  "duration_ms": 7444,
+  "uuid": "28436221-48bf-4886-bd9a-e814b1c4b088",
+  "ttft_stream_ms": 781,
+  "time_to_request_ms": 24,
+  "first_content_frame_ms": 781,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

@@ -1,0 +1,130 @@
+[
+  {
+    "url": "https://github.com/fabianmartinelli-fm/harness-audit/issues/1",
+    "reason": "Owner's pilot-results post for their own tool (harness-audit; fmslutions/harness-audit redirects here). It reports the tool's measured effect, so it is treated as marketing-adjacent, not an independent user report."
+  },
+  {
+    "url": "https://github.com/fabianmartinelli-fm/harness-audit/issues/2",
+    "reason": "Same owner and format as issue 1. The finding ('Codex was reading about 10% of AGENTS.md') is presented as a result of the owner's tool, so it is not an independent report."
+  },
+  {
+    "url": "https://github.com/Adam-S-Daniel/claude-memory-map/issues/47",
+    "reason": "Maintainer's note tracking an upstream Claude Code changelog entry against their own map. Not a problem the author experienced."
+  },
+  {
+    "url": "https://github.com/Adam-S-Daniel/claude-memory-map/issues/48",
+    "reason": "Maintainer's changelog-tracking note (auto-memory changes). Not a problem report."
+  },
+  {
+    "url": "https://github.com/Adam-S-Daniel/claude-memory-map/issues/34",
+    "reason": "Opened by a bot (agents-md-sync[bot])."
+  },
+  {
+    "url": "https://github.com/Adam-S-Daniel/claude-memory-map/issues/31",
+    "reason": "About Dependabot configuration, not coding-agent configuration."
+  },
+  {
+    "url": "https://github.com/orgs/community/discussions/202207",
+    "reason": "Feature request for custom-instruction metadata in webhooks and APIs (analytics). No configuration problem the author experienced."
+  },
+  {
+    "url": "https://github.com/orgs/community/discussions/202257",
+    "reason": "Copilot CLI stopped following copilot-instructions.md after an update. The post does not establish whether the file was not loaded or loaded and not followed; treated as instruction adherence and excluded as ambiguous."
+  },
+  {
+    "url": "https://github.com/orgs/community/discussions/202257#discussioncomment-17680502",
+    "reason": "'I've noticed similar behavior recently.' A +1 with no own description."
+  },
+  {
+    "url": "https://github.com/orgs/community/discussions/193202",
+    "reason": "The agent acknowledges the global instructions and ignores them. Instruction adherence, not configuration state."
+  },
+  {
+    "url": "https://github.com/orgs/community/discussions/184219",
+    "reason": "Opening post: the agent treats configured MCP tools as disabled. It does not establish a configuration problem (it may be model confusion). The reply by bmingles in the same thread, which describes tool groups that cannot be listed, is recorded instead."
+  },
+  {
+    "url": "https://forum.cursor.com/t/alwaysapply-true-rules-are-being-completely-ignored-now/158551/6",
+    "reason": "Reply by hermann-o: 'Same here...' A +1 to the opening post."
+  },
+  {
+    "url": "https://forum.cursor.com/t/title-product-injected-git-pr-browser-user-rules-cannot-be-disabled-in-app-send-feedback-also-fails-cloud-agent-gave-a-dead-bug-reports-url-agent-would-not-emit-unformatted-copy-text-forum-blocks-new-user-bug-posts-over-a-2-link-cap/171733",
+    "reason": "The injected blocks are the model's built-in system instructions (staff reply), not user configuration. The complaint is the missing off switch, not an unknown source or a config change."
+  },
+  {
+    "url": "https://forum.cursor.com/t/toggle-or-allowlist-for-agent-skills-roots-stop-loading-claude-skills-and-codex-skills-when-i-only-want-cursor-agents/160199",
+    "reason": "Preference-based feature request (only load Cursor skill roots). No problem the author experienced is described."
+  },
+  {
+    "url": "https://news.ycombinator.com/item?id=47668586",
+    "reason": "Lists how many places settings and MCP servers can live. General remark, no incident the commenter experienced."
+  },
+  {
+    "url": "https://news.ycombinator.com/item?id=49760765",
+    "reason": "Hypothetical framing ('say you added ... to your CLAUDE.md'). No first-person incident."
+  },
+  {
+    "url": "https://news.ycombinator.com/item?id=48682833",
+    "reason": "A third-party tool's installer overwrote the commenter's Codex config.toml. The change was made by an installer, not an agent, so it falls outside C2 as defined. Borderline."
+  },
+  {
+    "url": "https://news.ycombinator.com/item?id=47895029",
+    "reason": "The stop hook fires correctly; the model disregards its feedback. Instruction adherence, not configuration ignored or changed."
+  },
+  {
+    "url": "https://news.ycombinator.com/item?id=49814947",
+    "reason": "Link-only story (AGENTS.md read only with telemetry on). The first-person account is on an external blog, which is outside the protocol's sources."
+  },
+  {
+    "url": "https://news.ycombinator.com/item?id=49815398",
+    "reason": "Opinion about the AGENTS.md feature-flag design. No incident."
+  },
+  {
+    "url": "https://news.ycombinator.com/item?id=49815417",
+    "reason": "Explains default AGENTS.md behavior for others. No incident."
+  },
+  {
+    "url": "https://news.ycombinator.com/item?id=49815363",
+    "reason": "Anthropic staff member explaining the rollout and the fix (vendor staff)."
+  },
+  {
+    "url": "https://github.com/anthropics/claude-code/issues/95690",
+    "reason": "Describes the AGENTS.md telemetry gate in general terms. No first-person account of the failure, and the template fields are filled with non-answers."
+  },
+  {
+    "url": "https://github.com/anthropics/claude-code/issues/31523",
+    "reason": "Permission-prompt fatigue and rule accumulation. The reporter chose broad wildcards on purpose; none of C1-C5 as defined."
+  },
+  {
+    "url": "https://github.com/anthropics/claude-code/issues/82184",
+    "reason": "The reporter's own hook exempted every command through its own regex. The harness ran the hook as configured; this is a hook-logic defect, not configuration ignored, changed or broadened."
+  },
+  {
+    "url": "https://github.com/anthropics/claude-code/issues/89733",
+    "reason": "Claude breaks CLAUDE.md and memory rules after compaction. Instruction adherence, not configuration state."
+  },
+  {
+    "url": "https://github.com/anthropics/claude-code/issues/37869",
+    "reason": "Claude reads CLAUDE.md and then violates it. Instruction adherence, not configuration state."
+  },
+  {
+    "url": "https://www.reddit.com/r/ClaudeCode/comments/1qtblh4/how_to_agree_onreview_claudemd_changes/",
+    "reason": "Anticipated difficulty reviewing team CLAUDE.md changes ('seems like it would be a nightmare'). No review problem the author has had yet."
+  },
+  {
+    "url": "https://www.reddit.com/r/ClaudeCode/comments/1rmcyp7/settingsjson_scope_hierarchy_is_driving_me_insane/",
+    "reason": "Content fits C1 (a settings.local.json the poster had not created; wants to see every active setting and its source). Excluded under the marketing rule: the poster launched a Claude Code configuration CLI three days later ('Claude Toad', posts from 2026-03-09) and posted 'How long did it take you to get your CLAUDE.md right?' the day before, so this may be pre-launch validation."
+  },
+  {
+    "url": "https://www.reddit.com/r/cursor/comments/1tps1t3/how_do_you_actually_know_your_cursor_rules_are/",
+    "reason": "Mixes rule loading with model adherence ('or the model was ignoring all of it anyway'), and the thread's main substantive reply promotes a linter product. Not counted."
+  },
+  {
+    "url": "https://www.reddit.com/r/ClaudeAI/comments/1wgjrje/my_agent_deleted_the_file_that_was_stopping_it/",
+    "reason": "The title says the agent deleted the guard marker, but the body describes the bypass as possible ('could still rm .loop-active') and links the author's own repository. No clear account of the incident."
+  },
+  {
+    "url": "https://www.reddit.com/r/ClaudeAI/comments/1wgjrje/my_agent_deleted_the_file_that_was_stopping_it/pakg6zg/",
+    "reason": "Reply by EnvironmentalLeg8506 ('the agent just deleted the marker'). It closely paraphrases the opening post's own conclusions, and the same account posts similar paraphrasing replies in other threads (e.g. 1wj7v4y), so its independence from the original poster cannot be established."
+  }
+]

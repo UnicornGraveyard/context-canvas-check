@@ -1,0 +1,723 @@
+[
+  {
+    "id": "R02",
+    "coverage": "partial",
+    "tools": [
+      {
+        "tool": "settings-effective",
+        "verdict": "partial",
+        "evidence": "https://github.com/Londopy/settings-effective README 'What it catches': 'Unknown key | warn'; https://github.com/Londopy/settings-effective/blob/main/skills/settings-effective/scripts/effective.py resolve() (line 519) emits 'not a known settings key'. skipWorkflowUsageWarning is not in its 231-key index or in code.claude.com/docs/en/settings-reference, so the report would list the key, its value and ~/.claude/settings.json as the deciding file, flagged unknown."
+      },
+      {
+        "tool": "/status",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/settings#confirm-what-loaded: the Setting sources line 'confirms which files Claude Code read; it doesn't show which file supplied each key'."
+      },
+      {
+        "tool": "/doctor (claude doctor)",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/settings: claude doctor lists 'entries Claude Code rejected'; this key is honored, not rejected. https://code.claude.com/docs/en/commands lists no unknown-key or guardrail check for /doctor."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/claude-code.ts: permissions-skip-dangerous-prompt covers skipDangerousModePermissionPrompt only; no rule for skipWorkflowUsageWarning."
+      },
+      {
+        "tool": "agent-assurance, skill-rollcall, mcp-rollcall",
+        "verdict": "no",
+        "evidence": "https://github.com/kunko-ai-labs/agent-assurance/blob/main/docs/how-it-works.md: 'What the scanner understands' lists MCP server configs, Claude Code permission rules in project .claude/settings.json and settings.local.json, and serialized tool definitions. No hooks, agents, skills or user-level settings. The rollcalls read skills and MCP servers."
+      }
+    ],
+    "notes": "settings-effective would surface the key and its file but label it 'not a known settings key', which reads as inert although the harness honors it; no tool says what it suppresses or which session wrote it. The workflows doc says a first Yes in auto mode 'records consent in your user settings' without naming the key (https://code.claude.com/docs/en/workflows)."
+  },
+  {
+    "id": "R04",
+    "coverage": "covered",
+    "tools": [
+      {
+        "tool": "/doctor (claude doctor)",
+        "verdict": "covered",
+        "evidence": "https://code.claude.com/docs/en/debug-your-config: 'To find invalid settings files, run `claude doctor` from your terminal. It prints read-only installation and settings diagnostics'; https://code.claude.com/docs/en/commands: /doctor checks 'unparseable settings files'."
+      },
+      {
+        "tool": "settings-effective",
+        "verdict": "covered",
+        "evidence": "https://github.com/Londopy/settings-effective README: 'File isn't valid JSON | IGNORED | a trailing comma in settings.local.json; the whole file is skipped'; https://github.com/Londopy/settings-effective/blob/main/skills/settings-effective/scripts/effective.py read_json() returns 'invalid JSON' (line 369) and the layer shows SKIPPED; its SKILL.md tells the agent to rerun after it edits a settings file."
+      },
+      {
+        "tool": "/status",
+        "verdict": "partial",
+        "evidence": "https://code.claude.com/docs/en/settings#fix-a-broken-settings-file: 'After you continue, run /status to see the affected files'; the skipped user file would be missing from Setting sources, without a reason."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/scanner/parsers.ts parseJsonLenient strips trailing commas ('JSON with comments, trailing commas...'), and https://github.com/affaan-m/agentshield/blob/main/src/rules/claude-code.ts rules 'fail closed: an unparseable file yields no finding'. The file Claude Code skips is either scanned as valid (its sandbox listed as a recognized defense, src/reporter/defenses.ts) or skipped silently."
+      },
+      {
+        "tool": "agent-assurance",
+        "verdict": "no",
+        "evidence": "https://github.com/kunko-ai-labs/agent-assurance/blob/main/src/agent_assurance/scan/claude_settings.py: FILES = ('.claude/settings.json', '.claude/settings.local.json'), project files only; the broken file was ~/.claude/settings.json (it does note invalid JSON in project files)."
+      }
+    ],
+    "notes": "The invalid JSON is caught whenever someone runs claude doctor, /doctor or settings-effective after the edit; Claude Code itself reports a Settings Error only at the next interactive start, so the mid-session fail-open is caught only on demand. The 'protective-looking' key was sandbox.credentials, which is documented (settings-reference, added 2.1.187), so its failure to block the read, and the Read-vs-Bash gap, are runtime issues no static tool sees."
+  },
+  {
+    "id": "R06",
+    "coverage": "partial",
+    "tools": [
+      {
+        "tool": "/hooks",
+        "verdict": "partial",
+        "evidence": "https://code.claude.com/docs/en/hooks ('The /hooks menu'): shows 'every hook event with a count of configured hooks'. The five removed entries are simply absent; nothing records or compares an earlier state."
+      },
+      {
+        "tool": "settings-effective",
+        "verdict": "partial",
+        "evidence": "https://github.com/Londopy/settings-effective README: 'Permission rules and hooks itemized per source'. No baseline or history, so a removal shows only by absence."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "partial",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/policy/types.ts required_hooks ('Hook patterns that must be present in settings') and src/policy/evaluate.ts ('Required <event> hook with pattern ... not found') catch it only for hooks declared in a policy beforehand. Its baseline drift (src/watch/diff.ts) compares findings; the README says recognized defenses such as blocking PreToolUse hooks 'do not add points', and hooks-no-pretooluse fires only when no PreToolUse hook remains (src/rules/hooks.ts line 1026)."
+      },
+      {
+        "tool": "agent-assurance",
+        "verdict": "no",
+        "evidence": "https://github.com/kunko-ai-labs/agent-assurance/blob/main/docs/how-it-works.md: 'What the scanner understands' lists MCP server configs, Claude Code permission rules in project .claude/settings.json and settings.local.json, and serialized tool definitions. No hooks, agents, skills or user-level settings."
+      }
+    ],
+    "notes": "Only a before-and-after comparison catches this; the reporter found it in the git history of a dotfiles repo. Built-in and third-party listings show the current hooks, so the loss is visible only by absence, and agentshield flags it only if each guard hook was pre-declared in a policy."
+  },
+  {
+    "id": "R07",
+    "coverage": "partial",
+    "tools": [
+      {
+        "tool": "/mcp (claude mcp list)",
+        "verdict": "partial",
+        "evidence": "https://code.claude.com/docs/en/debug-your-config#check-mcp-servers: /mcp shows 'every configured server, its connection status, and whether you have approved it for the current project'. The servers would show as disabled, with no sign that the harness wrote the disable."
+      },
+      {
+        "tool": "mcp-rollcall",
+        "verdict": "partial",
+        "evidence": "https://github.com/Londopy/mcp-rollcall/blob/main/skills/mcp-rollcall/scripts/mcprollcall.py line 633: a .mcp.json server named in disabledMcpjsonServers gets state 'disabled' and the info note 'listed in disabledMcpjsonServers; the harness skips it' (the disabled list is checked before the enabled list). Info level, so --strict passes and it reads as a user choice."
+      },
+      {
+        "tool": "settings-effective",
+        "verdict": "partial",
+        "evidence": "https://github.com/Londopy/settings-effective README: prints 'every effective key: its value and which layer set it', so both lists in .claude/settings.local.json would appear with the same names; the contradiction is not flagged."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/mcp.ts has mcp-auto-approve-project-servers for enableAllProjectMcpServers but no rule on enabledMcpjsonServers or disabledMcpjsonServers; baseline drift compares findings."
+      },
+      {
+        "tool": "agent-assurance",
+        "verdict": "no",
+        "evidence": "https://github.com/kunko-ai-labs/agent-assurance/blob/main/docs/how-it-works.md: each server in .mcp.json 'becomes a system'; enable and disable lists are not modeled."
+      }
+    ],
+    "notes": "Tools show the servers as disabled but present it as a normal state. None flags that the same names sit in both lists or that the state changed after the user approved the servers."
+  },
+  {
+    "id": "R08",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "/hooks",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/hooks: /hooks lets you 'check which settings file a hook came from, or inspect a hook's command'. It shows the command string, not the file it resolves to, its hash or its age, so a swapped, stale or unresolved script looks the same."
+      },
+      {
+        "tool": "settings-effective",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/settings-effective/blob/main/skills/settings-effective/scripts/effective.py hook_rows() (line 616) lists event, matcher, command and source layer only."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/hooks.ts pattern-matches hook commands and scripts for risky behavior (hooks-no-error-handling flags 2>/dev/null and || true); nothing checks script identity, staleness or resolution. --sandbox (src/sandbox/analyzer.ts) looks for malicious behavior."
+      },
+      {
+        "tool": "/doctor (claude doctor)",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/commands: /doctor 'flags slow hooks'; nothing on which file a hook runs."
+      },
+      {
+        "tool": "agent-assurance",
+        "verdict": "no",
+        "evidence": "https://github.com/kunko-ai-labs/agent-assurance/blob/main/docs/how-it-works.md: 'What the scanner understands' lists MCP server configs, Claude Code permission rules in project .claude/settings.json and settings.local.json, and serialized tool definitions. No hooks, agents, skills or user-level settings."
+      }
+    ],
+    "notes": "All three variants (same-named script overwritten, stale installed copy, shim that resolves nothing) need the resolved target plus a content hash compared with a source or baseline; no listed tool does that. /hooks and settings-effective answer only one of the reporter's four asks: which settings file a row came from."
+  },
+  {
+    "id": "R09",
+    "coverage": "partial",
+    "tools": [
+      {
+        "tool": "/status",
+        "verdict": "partial",
+        "evidence": "https://code.claude.com/docs/en/settings#confirm-what-loaded: 'a Setting sources line that lists each settings file Claude Code loaded'. The ancestor file would be missing, with no mention that it exists and was skipped."
+      },
+      {
+        "tool": "/hooks",
+        "verdict": "partial",
+        "evidence": "https://code.claude.com/docs/en/debug-your-config#check-hooks: 'If a hook you defined doesn't appear, it isn't being read.' The guard suite would be absent from the list."
+      },
+      {
+        "tool": "/permissions",
+        "verdict": "partial",
+        "evidence": "https://code.claude.com/docs/en/permissions#manage-permissions: lists 'all permission rules and the settings.json file each rule comes from'; the ancestor deny rules would be absent."
+      },
+      {
+        "tool": "settings-effective",
+        "verdict": "partial",
+        "evidence": "https://github.com/Londopy/settings-effective/blob/main/skills/settings-effective/scripts/effective.py project_dir() (line 375) stops at the git root, matching the harness, so it shows no project layer and no hooks; it doesn't look for or report a settings file in an ancestor directory."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield README: scans ~/.claude or the given path. From repo-a it never sees ~/work/.claude/settings.json; from ~/work it would credit those hooks and deny rules as defenses."
+      },
+      {
+        "tool": "agent-assurance",
+        "verdict": "no",
+        "evidence": "https://github.com/kunko-ai-labs/agent-assurance/blob/main/docs/how-it-works.md: 'What the scanner understands' lists MCP server configs, Claude Code permission rules in project .claude/settings.json and settings.local.json, and serialized tool definitions. No hooks, agents, skills or user-level settings."
+      }
+    ],
+    "notes": "Documented: 'Claude Code reads the shared .claude/settings.json from the session's primary working directory' (https://code.claude.com/docs/en/settings). Every tool shows the hooks and deny rules as missing only by absence; none reports the skipped ancestor file, which is the one warning the reporter asked for."
+  },
+  {
+    "id": "R10",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "/permissions",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/permissions#manage-permissions lists the rules as loaded. Anthropic's reply on the issue: '/permissions showing such rules as loaded with no hint they won't apply to protected paths is confusing'."
+      },
+      {
+        "tool": "settings-effective",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/settings-effective/blob/main/skills/settings-effective/scripts/effective.py permission_findings() (line 583) checks exact deny/ask overlap and rule shape only; no protected-path logic."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/permissions.ts permissions-sensitive-path-access matches /etc/, .ssh, .aws, .gnupg, /root/ and /var/log in allow rules, not .claude; no protected-path semantics."
+      },
+      {
+        "tool": "agent-assurance",
+        "verdict": "no",
+        "evidence": "https://github.com/kunko-ai-labs/agent-assurance/blob/main/docs/how-it-works.md: treats allow as auto-approval; protected paths are not modeled."
+      }
+    ],
+    "notes": "Documented at https://code.claude.com/docs/en/permission-modes#protected-paths: 'permissions.allow rules in settings files do not pre-approve protected-path writes.' No tool flags an allow rule that targets a protected path, and the native view shows it as in effect."
+  },
+  {
+    "id": "R11",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "claude plugin validate",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields: 'Claude Code ignores a field it doesn't recognize without reporting an error.' Validate's 'Unknown field' warning is for the manifest (https://code.claude.com/docs/en/plugins/troubleshooting); for an agents directory it reports frontmatter that doesn't parse (https://code.claude.com/docs/en/sub-agents, 'Check an agents directory before a session')."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/agents.ts line 141 sets hasExplicitTools with the regex \\btools\\s*:, which matches 'allowed-tools:', so agents-no-tools-restriction does not fire. https://github.com/affaan-m/agentshield/blob/main/src/reporter/defenses.ts line 444 reads metadata['allowed-tools'] as the agent's tool list and would report 'Agent tool allow list without Write, Edit, or Bash' as a recognized defense."
+      },
+      {
+        "tool": "/context",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/debug-your-config: lists 'custom subagents with the source each loaded from', not their tools."
+      },
+      {
+        "tool": "skill-rollcall",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/skill-rollcall README: scans skill folders only; agentshield's mirror rule skills-tools-key-misuse covers tools: in SKILL.md, not allowed-tools: in agent files."
+      },
+      {
+        "tool": "settings-effective, mcp-rollcall, agent-assurance",
+        "verdict": "no",
+        "evidence": "None of them reads agent files. https://github.com/kunko-ai-labs/agent-assurance/blob/main/docs/how-it-works.md: 'What the scanner understands' lists MCP server configs, Claude Code permission rules in project .claude/settings.json and settings.local.json, and serialized tool definitions. No hooks, agents, skills or user-level settings."
+      }
+    ],
+    "notes": "Documented semantics: tools is the agent field, unknown fields are ignored silently, and an omitted tools list inherits every tool (https://code.claude.com/docs/en/sub-agents). agentshield would give false reassurance here by crediting allowed-tools as a restriction."
+  },
+  {
+    "id": "R12",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "claude plugin validate",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/plugins/cli-reference#plugin-validate checks skill, agent and command frontmatter for parse errors and schema violations (changelog 2.1.77); nothing documented resolves a skill's agent: reference."
+      },
+      {
+        "tool": "/context",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/debug-your-config: lists available subagents (plugin agents under <plugin>:<name>), not which agent a forked skill resolved to."
+      },
+      {
+        "tool": "skill-rollcall",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/skill-rollcall README 'What it catches': description, name and portability lint (e.g. 'frontmatter `context:` is Claude Code-only'); no check of the agent: reference."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/claude-code.ts skills-* rules inspect content and allowed-tools; none resolves agent:."
+      },
+      {
+        "tool": "settings-effective, mcp-rollcall, agent-assurance",
+        "verdict": "no",
+        "evidence": "Out of scope (settings, MCP, permissions)."
+      }
+    ],
+    "notes": "Anthropic confirmed the silent fallback as a bug on the issue. Plugin agents are named <plugin>:<name> (https://code.claude.com/docs/en/plugins/components#agents), so a checker could resolve bare names; /tasks, outside the protocol's list, shows the model on a subagent's row."
+  },
+  {
+    "id": "R13",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "/permissions",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/permissions#manage-permissions shows the Bash(curl *) deny rule as in effect."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/reporter/defenses.ts lists a 'Permission deny list' defense that 'covers curl'; nothing models auto mode."
+      },
+      {
+        "tool": "settings-effective",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/settings-effective shows the deny rule as effective; no mode-specific behavior."
+      },
+      {
+        "tool": "agent-assurance",
+        "verdict": "no",
+        "evidence": "https://github.com/kunko-ai-labs/agent-assurance/blob/main/src/agent_assurance/scan/claude_settings.py: a deny rule is recorded as removing the capability."
+      }
+    ],
+    "notes": "The docs say allow, ask and deny rules resolve before the classifier in auto mode (https://code.claude.com/docs/en/permission-modes, 'How the classifier evaluates actions'), so this is a runtime bug that static tools can't see. Two tools show the rule as protective."
+  },
+  {
+    "id": "R16",
+    "coverage": "partial",
+    "tools": [
+      {
+        "tool": "/context",
+        "verdict": "partial",
+        "evidence": "https://code.claude.com/docs/en/debug-your-config: /context shows 'custom subagents with the source each loaded from'; the dropped agent is absent, with no reason."
+      },
+      {
+        "tool": "claude plugin validate",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/sub-agents: run against .claude/agents it finds 'files ... whose frontmatter doesn't parse' and 'doesn't flag a file whose frontmatter parses but has no name'. No doc says it rejects hooks: [] (changelog 2.1.77 mentions 'schema violations' in agent frontmatter in general)."
+      },
+      {
+        "tool": "/doctor (claude doctor)",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/debug-your-config: /doctor reports 'duplicate subagent names in the same directory', not skipped files."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/claude-code.ts agent rules (e.g. agents-frontmatter-hooks-allow) inspect hook content, not the type of the hooks field."
+      }
+    ],
+    "notes": "The agent shows up only by its absence from /context and from '--agent <name> not found. Available agents: ...'. Whether claude plugin validate catches the array type is undocumented; the docs' list of subagent files Claude Code skips does not include this case."
+  },
+  {
+    "id": "R17",
+    "coverage": "covered",
+    "tools": [
+      {
+        "tool": "/mcp (claude mcp list)",
+        "verdict": "covered",
+        "evidence": "https://code.claude.com/docs/en/mcp ('Configuration warnings'): 'Missing environment variable: if a ${VAR} reference ... names a variable that isn't set and has no :-default, Claude Code warns in claude mcp list output and in /mcp, naming the variable, and still loads the server with the ${VAR} text unexpanded.'"
+      },
+      {
+        "tool": "mcp-rollcall",
+        "verdict": "partial",
+        "evidence": "https://github.com/Londopy/mcp-rollcall README: 'var-unset | error'; https://github.com/Londopy/mcp-rollcall/blob/main/skills/mcp-rollcall/scripts/mcprollcall.py line 769. It checks its own process environment (line 754), so run from the launch shell it flags the variable, but run as a skill inside Claude Code the settings env block that held the token may be in its environment and it would pass."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/mcp.ts (mcp-hardcoded-env, mcp-env-override, mcp-env-inheritance and others) checks secrets and risky servers, not whether a ${VAR} is set."
+      },
+      {
+        "tool": "agent-assurance",
+        "verdict": "no",
+        "evidence": "https://github.com/kunko-ai-labs/agent-assurance/blob/main/docs/how-it-works.md: env and header names are read only to infer credential access."
+      }
+    ],
+    "notes": "Version-specific: on 2.1.138 the REPL dropped the server silently and /mcp said 'No MCP servers configured'; current docs describe a named warning instead. Whether a settings env block feeds ${VAR} expansion in .mcp.json is still undocumented."
+  },
+  {
+    "id": "R18",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "/context",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/debug-your-config: shows the main conversation's memory files; nothing shows what a subagent loaded."
+      },
+      {
+        "tool": "/memory",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/memory: lists memory file locations, not what loaded where."
+      },
+      {
+        "tool": "settings-effective, skill-rollcall, mcp-rollcall, agentshield, agent-assurance",
+        "verdict": "no",
+        "evidence": "None models what a subagent loads at startup."
+      }
+    ],
+    "notes": "Current docs: Explore and Plan skip CLAUDE.md, and custom subagents load it unless they set omitClaudeMd (https://code.claude.com/docs/en/debug-your-config, 'Subagent ignores CLAUDE.md instructions'). No listed tool reports a subagent's loaded context, so the gap could not have been seen before the audit ran."
+  },
+  {
+    "id": "R21",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "Codex /status and /debug-config",
+        "verdict": "no",
+        "evidence": "https://developers.openai.com/codex/cli/slash-commands: /status confirms 'approval policy, writable roots'; /debug-config prints 'config layer order ... and policy sources'. Both would show approvals_reviewer and the sandbox level; neither says that auto_review approves escalations out of --sandbox read-only, and codex exec shows the requested level in its header."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/codex.ts covers approval_policy = never, danger-full-access, trusted home and project escalation keys; PROJECT_ESCALATION_KEYS (line 377) doesn't include approvals_reviewer."
+      },
+      {
+        "tool": "mcp-rollcall, skill-rollcall, agent-assurance",
+        "verdict": "no",
+        "evidence": "They read Codex MCP servers or skills only."
+      }
+    ],
+    "notes": "Codex docs say auto_review 'evaluates only actions that already need approval, such as sandbox escalations' (https://developers.openai.com/codex/agent-approvals-security), but nothing warns an exec caller that the read-only level no longer binds."
+  },
+  {
+    "id": "R22",
+    "coverage": "partial",
+    "tools": [
+      {
+        "tool": "Codex instruction audit (TUI log)",
+        "verdict": "partial",
+        "evidence": "https://developers.openai.com/codex/guides/agents-md: 'To audit which instruction files Codex loaded, opt into a plaintext TUI log'; https://github.com/openai/codex/blob/main/codex-rs/core/src/agents_md.rs logs tracing::warn 'project doc exceeds remaining budget; truncating'. The warning goes only to the log, not the TUI, /status or exec output."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/agents.ts agents-oversized-prompt applies to agent-md files, not AGENTS.md; no check against project_doc_max_bytes."
+      },
+      {
+        "tool": "skill-rollcall, mcp-rollcall, settings-effective, agent-assurance",
+        "verdict": "no",
+        "evidence": "None reads AGENTS.md size (agent-assurance: AGENTS.md is 'detected but not supported')."
+      }
+    ],
+    "notes": "The 32 KiB limit is documented ('stops adding files once the combined size reaches ... project_doc_max_bytes (32 KiB by default)'). Truncation is logged, not shown; the docs also suggest asking Codex to summarize its instructions, which is a model self-report."
+  },
+  {
+    "id": "R25",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "Copilot references",
+        "verdict": "no",
+        "evidence": "https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions: 'Whenever repository custom instructions are used by Copilot Chat, the instructions file is added as a reference'. Chat only, not code review."
+      },
+      {
+        "tool": "Copilot code review session logs",
+        "verdict": "no",
+        "evidence": "https://docs.github.com/en/copilot/how-tos/use-copilot-agents/request-a-code-review/use-code-review: session logs show 'which MCP servers and tools were called'; after the review, and not documented to show instruction loading."
+      },
+      {
+        "tool": "third-party tools",
+        "verdict": "no",
+        "evidence": "None reads Copilot instruction files for code review."
+      }
+    ],
+    "notes": "No validator checks .instructions.md frontmatter either: the report's excludeAgent: \"coding-agent\" is not one of the values the docs list ('code-review' or 'cloud-agent'), and nothing would say so."
+  },
+  {
+    "id": "R26",
+    "coverage": "partial",
+    "tools": [
+      {
+        "tool": "Copilot cloud agent session log",
+        "verdict": "partial",
+        "evidence": "https://docs.github.com/en/copilot/how-tos/copilot-on-github/use-copilot-agents/manage-and-track-agents: 'Session logs show Copilot's internal reasoning and the tools it used to understand your repository'. The reporter confirmed the missing fetch there; visible by absence once the session runs."
+      },
+      {
+        "tool": "third-party tools",
+        "verdict": "no",
+        "evidence": "None models Copilot cloud agent instruction loading."
+      }
+    ],
+    "notes": "A difference between org-owned and personal repositories in the hosted agent; no static check applies. The session log shows it only while or after the agent runs."
+  },
+  {
+    "id": "R27",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "VS Code tools picker and virtual tools",
+        "verdict": "no",
+        "evidence": "https://code.visualstudio.com/docs/copilot/reference/copilot-settings: github.copilot.chat.virtualTools.threshold, 'Virtual tools group similar sets of tools together and enable the model to activate them on-demand' (default 128). https://code.visualstudio.com/docs/copilot/agents/agent-tools documents the tools picker by source; no documented view lists the virtual groups."
+      },
+      {
+        "tool": "mcp-rollcall",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/mcp-rollcall README: lists VS Code MCP servers and, with --probe, tool counts and a 'heavy' note; it does not model virtual tool groups."
+      }
+    ],
+    "notes": "The commenter's gap (tool groups not listable by the agent or the user) has no documented diagnostic."
+  },
+  {
+    "id": "R28",
+    "coverage": "partial",
+    "tools": [
+      {
+        "tool": "Cursor agent mcp list",
+        "verdict": "partial",
+        "evidence": "https://cursor.com/docs/cli/mcp: lists 'Server names and identifiers', 'Connection status', 'Configuration source'. Here it printed 'No MCP servers configured', which shows nothing loaded but misstates why; Cursor staff: the CLI 'falls back to an empty config with no logs'."
+      },
+      {
+        "tool": "mcp-rollcall",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/mcp-rollcall/blob/main/skills/mcp-rollcall/scripts/mcprollcall.py line 400 maps 'streamable-http' to 'http', so both servers would pass its static checks for the cursor host."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/harnesses.ts line 1066 accepts streamable-?http as a remote type."
+      }
+    ],
+    "notes": "Cursor's IDE accepts the value and its CLI rejects the whole file; both third-party tools model the IDE, so they would pass the config."
+  },
+  {
+    "id": "R29",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "Cursor Customize > Team Rules",
+        "verdict": "no",
+        "evidence": "https://cursor.com/docs/rules: non-enforced Team Rules can be toggled off 'under Team Rules in Customize'. The toggle showed off while the rule was still injected."
+      },
+      {
+        "tool": "third-party tools",
+        "verdict": "no",
+        "evidence": "None reads Cursor team rules, which live in the team dashboard."
+      }
+    ],
+    "notes": "No documented view lists the rules actually sent to the model; the reporter asked the agent. Cursor staff traced it to rule names containing '/'."
+  },
+  {
+    "id": "R30",
+    "coverage": "partial",
+    "tools": [
+      {
+        "tool": "Cursor Settings > Rules",
+        "verdict": "partial",
+        "evidence": "https://cursor.com/docs/rules: 'Control how rules are applied from the type dropdown'. The panel showed the plugin rule as 'Agent decides when to apply' despite alwaysApply: true, i.e. the effective mode, without flagging the mismatch; changing it there wrote duplicate frontmatter."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/harnesses.ts scans .cursor/rules/*.mdc content, not how plugin-cache rules are applied."
+      },
+      {
+        "tool": "skill-rollcall",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/skill-rollcall README: skills only; Cursor rules are not read."
+      }
+    ],
+    "notes": "Confirmed Cursor bug, fixed in 3.6 per staff. The built-in panel shows the downgrade but not that it contradicts the file."
+  },
+  {
+    "id": "R32",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "Cursor CLI configuration and permissions",
+        "verdict": "no",
+        "evidence": "https://cursor.com/docs/cli/reference/permissions and https://cursor.com/docs/cli/reference/configuration document the global and project files but not how they merge; no command shows effective permissions."
+      },
+      {
+        "tool": "third-party tools",
+        "verdict": "no",
+        "evidence": "settings-effective reads Claude Code settings only; agentshield's Cursor coverage is hooks and MCP."
+      }
+    ],
+    "notes": "Cursor staff: an empty or partial project permissions block overrides the global allow list during merge, so the global grant never applies. Nothing shows the effective list."
+  },
+  {
+    "id": "R33",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "Cursor CLI",
+        "verdict": "no",
+        "evidence": "https://cursor.com/help/customization/rules: 'Cursor reads CLAUDE.md files the same way it reads AGENTS.md'. No CLI command lists the rules, skills, subagents or hooks imported from .claude/ or .codex/ (https://cursor.com/docs/cli/reference/slash-commands)."
+      },
+      {
+        "tool": "skill-rollcall",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/skill-rollcall README 'Where each host looks': Cursor = ~/.cursor/skills and .agents/skills, so skills cursor-agent imports from .claude/skills would not be shown as Cursor's."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield scans Claude Code files as Claude Code config; it doesn't report that another harness loads them."
+      }
+    ],
+    "notes": "Cursor staff agreed the IDE's third-party toggle doesn't reach the CLI; no tool shows what the CLI imports."
+  },
+  {
+    "id": "R36",
+    "coverage": "partial",
+    "tools": [
+      {
+        "tool": "/hooks",
+        "verdict": "partial",
+        "evidence": "https://code.claude.com/docs/en/hooks: /hooks shows each hook's command and 'which settings file a hook came from', so the leftover Headroom hook would be listed; it doesn't check that the command, or the rtk binary the script calls, resolves."
+      },
+      {
+        "tool": "settings-effective",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/settings-effective/blob/main/skills/settings-effective/scripts/effective.py: reads managed, --settings, project local, project and user files; ~/.claude/settings.local.json is read only when run from the home directory, and hook commands are never checked."
+      },
+      {
+        "tool": "mcp-rollcall",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/mcp-rollcall README: command-missing applies to MCP server commands, not hooks."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/hooks.ts matches risky patterns; no check that a hook's script or its binaries exist."
+      }
+    ],
+    "notes": "Native views surface the stale hook, not the failure (a hook calling a binary that is gone). Catching it needs command resolution inside the hook script."
+  },
+  {
+    "id": "R37",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "/hooks and /permissions",
+        "verdict": "no",
+        "evidence": "Each shows its own piece (the new PreToolUse hook; the Bash(rm:*) and Bash(rmdir:*) ask rules); nothing relates them."
+      },
+      {
+        "tool": "settings-effective",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/settings-effective/blob/main/skills/settings-effective/scripts/effective.py line 594 flags an allow rule outranked by an ask rule only for identical rule strings; hooks are not considered."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/rules/claude-code.ts hooks-auto-allow-decision (line 770) fires only for unconditional allow hooks and treats them as a risk ('Deny and ask rules still win'), not as shadowed."
+      },
+      {
+        "tool": "agent-assurance",
+        "verdict": "no",
+        "evidence": "https://github.com/kunko-ai-labs/agent-assurance/blob/main/docs/how-it-works.md: 'What the scanner understands' lists MCP server configs, Claude Code permission rules in project .claude/settings.json and settings.local.json, and serialized tool definitions. No hooks, agents, skills or user-level settings."
+      }
+    ],
+    "notes": "Documented: for PreToolUse, 'Deny and ask rules are still evaluated regardless of what the hook returns' (https://code.claude.com/docs/en/hooks). The post's screenshot shows the ask rules overriding the hook's allow; no tool flags a hook decision shadowed by an ask rule."
+  },
+  {
+    "id": "R39",
+    "coverage": "not covered",
+    "tools": [
+      {
+        "tool": "/permissions",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/permissions#manage-permissions shows the rules as loaded with their files."
+      },
+      {
+        "tool": "settings-effective",
+        "verdict": "no",
+        "evidence": "https://github.com/Londopy/settings-effective/blob/main/skills/settings-effective/scripts/effective.py permission_findings() checks rule shape and exact deny/ask/allow overlap; no path anchoring."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/reporter/defenses.ts lists a 'Permission deny list' as a recognized defense; its path rules (src/rules/permissions.ts) read '/etc/'-style strings as absolute."
+      },
+      {
+        "tool": "agent-assurance",
+        "verdict": "no",
+        "evidence": "https://github.com/kunko-ai-labs/agent-assurance/blob/main/src/agent_assurance/scan/claude_settings.py: deny rules are recorded as notes."
+      }
+    ],
+    "notes": "Documented: 'A pattern like /Users/alice/file isn't an absolute path. The single leading slash anchors at the settings source ... Use //Users/alice/file' (https://code.claude.com/docs/en/permissions#read-and-edit). Claude Code's own startup warning covers Write, NotebookEdit, MultiEdit and Glob path rules, not this case (https://code.claude.com/docs/en/errors)."
+  },
+  {
+    "id": "R40",
+    "coverage": "partial",
+    "tools": [
+      {
+        "tool": "claude plugin validate",
+        "verdict": "partial",
+        "evidence": "https://code.claude.com/docs/en/plugins/cli-reference#plugin-validate: validates 'a marketplace manifest' and plugin directories; run on the org marketplace it would report the structural errors that triggered the wipe. It doesn't detect the wipe."
+      },
+      {
+        "tool": "settings-effective and /status",
+        "verdict": "no",
+        "evidence": "Show only the current (wiped) file."
+      },
+      {
+        "tool": "agentshield",
+        "verdict": "no",
+        "evidence": "https://github.com/affaan-m/agentshield/blob/main/src/watch/diff.ts compares findings, and marketplace keys barely appear in its rules (settings-marketplace-insecure), so losing the file's contents is not flagged."
+      },
+      {
+        "tool": "agent-assurance",
+        "verdict": "no",
+        "evidence": "https://github.com/kunko-ai-labs/agent-assurance/blob/main/docs/how-it-works.md: 'What the scanner understands' lists MCP server configs, Claude Code permission rules in project .claude/settings.json and settings.local.json, and serialized tool definitions. No hooks, agents, skills or user-level settings."
+      }
+    ],
+    "notes": "The wipe is harness-initiated drift; nothing compares .claude/settings.json with a committed or last-seen copy. Validate helps only by preventing the trigger."
+  },
+  {
+    "id": "R41",
+    "coverage": "partial",
+    "tools": [
+      {
+        "tool": "/context",
+        "verdict": "partial",
+        "evidence": "https://code.claude.com/docs/en/debug-your-config: 'If a memory file is missing from the /context breakdown ... Subdirectory CLAUDE.md files load on demand when Claude reads a file in that directory with the Read tool'. /context shows by absence that infra/CLAUDE.md hasn't loaded, at the moment you check."
+      },
+      {
+        "tool": "/memory",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/memory: lists memory file locations, not whether a nested file loaded."
+      },
+      {
+        "tool": "/hooks",
+        "verdict": "no",
+        "evidence": "https://code.claude.com/docs/en/hooks: shows the Edit|Write matchers but not that Bash edits bypass them."
+      },
+      {
+        "tool": "settings-effective, skill-rollcall, mcp-rollcall, agentshield, agent-assurance",
+        "verdict": "no",
+        "evidence": "None models on-demand instruction loading or which tool Claude uses to edit."
+      }
+    ],
+    "notes": "The on-demand loading rule is documented; the Bash-first auto mode instruction the post measured is not. Only a live /context check, by absence, shows the missing file; the hook bypass is not surfaced."
+  }
+]

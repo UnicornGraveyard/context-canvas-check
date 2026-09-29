@@ -1,0 +1,17 @@
+{
+  "task": "T2",
+  "run": 2,
+  "fixture": "webapp",
+  "prompt": "Let Claude run `npm test` without asking for permission every time.",
+  "claudeVersion": "2.1.283 (Claude Code)",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 9374,
+  "costUsd": 0.0471696,
+  "turns": 4,
+  "isError": false,
+  "finishedAt": "2026-09-27T12:14:33.673Z"
+}

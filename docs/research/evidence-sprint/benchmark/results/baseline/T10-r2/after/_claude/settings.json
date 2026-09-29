@@ -1,0 +1,46 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make test)",
+      "Bash(make lint)",
+      "Edit(services/**)",
+      "WebFetch(domain:docs.internal.example.com)"
+    ],
+    "ask": [
+      "Bash(terraform plan:*)"
+    ],
+    "deny": [
+      "Bash(terraform apply:*)",
+      "Bash(rm -rf:*)",
+      "Read(./secrets/**)"
+    ],
+    "defaultMode": "plan",
+    "disableBypassPermissionsMode": "disable",
+    "additionalDirectories": ["../shared-config"]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "make fmt-changed",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \"$CLAUDE_PROJECT_DIR\"/.claude/context/oncall.md"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledMcpjsonServers": ["pagerduty"]
+}

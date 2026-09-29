@@ -1,0 +1,97 @@
+{
+  "duration_api_ms": 12110,
+  "stop_reason": "end_turn",
+  "session_id": "224cd1a0-07c3-4175-a64c-25701fcb6016",
+  "total_cost_usd": 0.062063,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 4335,
+    "cache_read_input_tokens": 23255,
+    "output_tokens": 1135,
+    "output_tokens_details": {
+      "thinking_tokens": 313
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4335,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 303,
+        "cache_read_input_tokens": 7213,
+        "cache_creation_input_tokens": 707,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 707
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 1135,
+      "cacheReadInputTokens": 23255,
+      "cacheCreationInputTokens": 4335,
+      "webSearchRequests": 0,
+      "costUSD": 0.062063,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 313,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 5,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The reviewer agent is now read-only. I changed `.claude/agents/reviewer.md` in three ways:\n\n- **Removed `Edit`** from `tools`, so it only has `Read, Grep, Glob`.\n- **Removed `memory: project`.** Memory automatically gives the agent Read, Write and Edit so it can manage its memory files, which meant it could still write files even without `Edit` in its list.\n- **Added `disallowedTools: Edit, Write, NotebookEdit, Bash`.** This blocks writes even if someone adds these tools back to `tools` later. Bash is on the list because shell commands like `sed -i` or `>` can change files.\n\nOne thing you lose: the reviewer no longer keeps project memory between runs. If you want that back, the agent would need write access, at least to its own memory folder.\n\nI didn't run `npm run lint` or `npm run build` because this only changes agent config, not app code.",
+  "ttft_ms": 1685,
+  "type": "result",
+  "duration_ms": 12184,
+  "uuid": "2a65f906-16ac-47a1-8acc-a52563f2bffb",
+  "ttft_stream_ms": 742,
+  "time_to_request_ms": 25,
+  "first_content_frame_ms": 743,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

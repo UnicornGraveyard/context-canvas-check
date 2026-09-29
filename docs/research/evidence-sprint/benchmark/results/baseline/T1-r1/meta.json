@@ -1,0 +1,17 @@
+{
+  "task": "T1",
+  "run": 1,
+  "fixture": "webapp",
+  "prompt": "Add a subagent called docs-writer that writes and updates the Markdown documentation under docs/. It must not be able to run shell commands. Use the fastest model.",
+  "claudeVersion": "2.1.283 (Claude Code)",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 13410,
+  "costUsd": 0.058911399999999996,
+  "turns": 6,
+  "isError": false,
+  "finishedAt": "2026-09-27T12:13:48.240Z"
+}

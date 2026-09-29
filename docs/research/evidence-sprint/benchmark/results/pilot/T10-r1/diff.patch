@@ -1,0 +1,41 @@
+diff --git a/.claude/agents/sre.md b/.claude/agents/sre.md
+index 2c7bf03..9ed56d2 100644
+--- a/.claude/agents/sre.md
++++ b/.claude/agents/sre.md
+@@ -7,7 +7,6 @@ model: opus
+ permissionMode: plan
+ mcpServers:
+   - pagerduty
+-  - internal-docs
+ color: red
+ ---
+ 
+diff --git a/.claude/settings.json b/.claude/settings.json
+index 67f10fd..bb69974 100644
+--- a/.claude/settings.json
++++ b/.claude/settings.json
+@@ -42,5 +42,5 @@
+       }
+     ]
+   },
+-  "enabledMcpjsonServers": ["pagerduty", "internal-docs"]
++  "enabledMcpjsonServers": ["pagerduty"]
+ }
+diff --git a/.mcp.json b/.mcp.json
+index 19784d8..d73101c 100644
+--- a/.mcp.json
++++ b/.mcp.json
+@@ -7,13 +7,6 @@
+       "env": {
+         "PAGERDUTY_API_TOKEN": "${PAGERDUTY_API_TOKEN}"
+       }
+-    },
+-    "internal-docs": {
+-      "type": "http",
+-      "url": "https://docs.internal.example.com/mcp",
+-      "headers": {
+-        "X-Api-Key": "${DOCS_API_KEY}"
+-      }
+     }
+   }
+ }

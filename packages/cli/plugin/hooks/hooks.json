@@ -1,0 +1,20 @@
+{
+  "description": "Context Canvas check: reports agent configuration that won't apply as written.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/bin/context-canvas.mjs\" check --hook session-start", "timeout": 20 }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/bin/context-canvas.mjs\" check --hook post-edit", "timeout": 20 }
+        ]
+      }
+    ]
+  }
+}

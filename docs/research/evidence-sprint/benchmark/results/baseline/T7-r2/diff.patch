@@ -1,0 +1,15 @@
+diff --git a/.claude/settings.json b/.claude/settings.json
+index 67f10fd..5a03baa 100644
+--- a/.claude/settings.json
++++ b/.claude/settings.json
+@@ -12,7 +12,9 @@
+     "deny": [
+       "Bash(terraform apply:*)",
+       "Bash(rm -rf:*)",
+-      "Read(./secrets/**)"
++      "Read(./secrets/**)",
++      "Read(./infra/prod/**)",
++      "Edit(./infra/prod/**)"
+     ],
+     "defaultMode": "plan",
+     "disableBypassPermissionsMode": "disable",

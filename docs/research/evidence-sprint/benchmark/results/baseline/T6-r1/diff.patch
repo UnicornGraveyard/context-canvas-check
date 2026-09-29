@@ -1,0 +1,40 @@
+diff --git a/.claude/agents/release-manager.md b/.claude/agents/release-manager.md
+index 5a9ac59..b9552d0 100644
+--- a/.claude/agents/release-manager.md
++++ b/.claude/agents/release-manager.md
+@@ -4,7 +4,7 @@ description: Prepares releases. Use when the team is about to tag a version.
+ tools: Read, Grep, Glob, Write
+ model: haiku
+ skills:
+-  - release-notes
++  - changelog
+ ---
+ 
+ You prepare the release checklist and the release notes.
+diff --git a/.claude/skills/changelog/SKILL.md b/.claude/skills/changelog/SKILL.md
+new file mode 100644
+index 0000000..11ce036
+--- /dev/null
++++ b/.claude/skills/changelog/SKILL.md
+@@ -0,0 +1,11 @@
++---
++name: changelog
++description: Drafts release notes from merged pull requests since the last tag. Use when preparing a release.
++allowed-tools: Read, Grep, Glob, Bash(git log:*), Bash(git describe:*)
++---
++
++# Changelog
++
++1. Find the last tag with `git describe --tags --abbrev=0`.
++2. List merged changes since that tag with `git log --oneline <tag>..HEAD`.
++3. Group them under Added, Changed and Fixed. One line each, user-facing words.
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 26c2854..34cd526 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -5,4 +5,4 @@ A Next.js app with a Postgres database.
+ - Run `npm run lint` and `npm run build` before you finish a change.
+ - Never commit secrets. Config files reference secrets as `${VAR}`.
+ - The reviewer agent reviews every change. The tester agent adds missing tests.
+-- The release-manager agent uses the release-notes skill when we tag a version.
++- The release-manager agent uses the changelog skill when we tag a version.

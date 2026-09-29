@@ -1,0 +1,17 @@
+{
+  "task": "T9",
+  "run": 3,
+  "fixture": "platform",
+  "prompt": "Use Sonnet for the sre agent instead of Opus, and keep everything else as it is.",
+  "claudeVersion": "2.1.283 (Claude Code)",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 8065,
+  "costUsd": 0.043020800000000005,
+  "turns": 4,
+  "isError": false,
+  "finishedAt": "2026-09-27T12:19:26.689Z"
+}
