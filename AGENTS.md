@@ -5,12 +5,14 @@
 Check whether Claude Code configuration applies as intended. TypeScript / pnpm CLI and MCP plugin.
 
 - **Layout.** packages/core implements checks and packages/cli builds the CLI. The private monorepo exports this tree. Coordinate changes with its oss/ source.
-- **Local setup and validation.** `pnpm install --frozen-lockfile`, `pnpm typecheck`, `pnpm test`, `pnpm build`. Confirm any additional checks for the affected path in existing instructions and CI.
+- **Local setup and validation.** `pnpm install --frozen-lockfile`, `pnpm typecheck`, `pnpm test`, `pnpm build`. For source changes, commit the rebuilt plugin bundle under `packages/cli/plugin/bin/` as specified in CONTRIBUTING.md. Confirm any additional checks for the affected path in existing instructions and CI.
 - **Delivery.** CLI/plugin distribution. Hosted runtime unconfirmed.
 - **Jira.** Project CC (public export of Context Canvas).
 - **Notion.** Canonical project page unconfirmed. Follow the issue’s context link or resolve it with the owner.
 
 ## Portfolio engineering workflow
+
+The Jira and private Notion steps below apply to portfolio maintainers and their agents. External contributors and dependency bots can use public GitHub issues and the repository’s normal branch, commit and PR conventions. Maintainers handle any internal tracking.
 
 1. **Pick up the issue.** For substantive changes, read the Jira issue, its acceptance criteria, dependencies and linked Notion context. Read this file, applicable directory instructions, contribution notes and the affected implementation before editing. Confirm the intended outcome with the owner if requirements are missing. Keep product strategy, research and durable decisions in Notion, execution status in Jira and implementation history in GitHub.
 2. **Claim a single line of work.** Check Jira status, open PRs, remote branches, `git status --short --branch` and `git worktree list`. Resume the existing issue branch when one exists. Coordinate a single writer per branch. For independent tasks, use separate branches and worktrees. Preserve other contributors’ uncommitted changes.
